@@ -5,6 +5,7 @@ class Controller extends PhpObj {
     protected $repo;
     public static $routes = [
         '\core\event\course_viewed' => 'CourseViewed',
+        '\core\event\course_completed' => 'CourseCompleted',
         '\mod_page\event\course_module_viewed' => 'ModuleViewed',
         '\mod_quiz\event\course_module_viewed' => 'ModuleViewed',
         '\mod_url\event\course_module_viewed' => 'ModuleViewed',
@@ -39,6 +40,7 @@ class Controller extends PhpObj {
         '\core\event\user_created' => 'UserRegistered',
         '\core\event\user_enrolment_created' => 'EnrolmentCreated',
         '\mod_scorm\event\sco_launched' => 'ScormLaunched',
+        '\mod_feedback\event\response_submitted' => ['FeedbackSubmitted','FeedbackQuestionSubmitted'],
     ];
 
     /**
@@ -48,25 +50,25 @@ class Controller extends PhpObj {
 
     /**
      * Creates a new event.
-     * @param [String => Mixed] $opts
+     * @param [String => Mixed] $events
      * @return [String => Mixed]
      */
-    public function createEvents(array $opts) {
-        $route = isset($opts['event']['eventname']) ? $opts['event']['eventname'] : '';
-        if (isset(static::$routes[$route])) {
-            $results = [];
-                $route_events = is_array(static::$routes[$route]) ? static::$routes[$route] : [static::$routes[$route]];
-                foreach ($route_events as $route_event) {
-                try {
-                    $event = '\MXTranslator\Events\\'.$route_event;
-                    foreach ((new $event())->read($opts) as $index => $result) {
-                         array_push($results, $result);
-                     }
-                } catch (UnnecessaryEvent $ex) {}
-          }
-          return $results;
-        } else {
-          return [];
+    public function createEvents(array $events) {
+        $results = [];
+        foreach ($events as $index => $opts) {
+            $route = isset($opts['event']['eventname']) ? $opts['event']['eventname'] : '';
+            if (isset(static::$routes[$route])) {
+                    $route_events = is_array(static::$routes[$route]) ? static::$routes[$route] : [static::$routes[$route]];
+                    foreach ($route_events as $route_event) {
+                    try {
+                        $event = '\MXTranslator\Events\\'.$route_event;
+                        foreach ((new $event())->read($opts) as $index => $result) {
+                             array_push($results, $result);
+                         }
+                    } catch (UnnecessaryEvent $ex) {}
+                }
+            }
         }
+        return $results;
     }
 }

@@ -11,14 +11,16 @@ class Event extends PhpObj {
      * @return [String => Mixed]
      */
     public function read(array $opts) {
-        $version = str_replace(PHP_EOL, '', file_get_contents(__DIR__.'/../../VERSION'));
+        $version = trim(file_get_contents(__DIR__.'/../../VERSION'));
         $opts['info']->{'https://github.com/LearningLocker/Moodle-xAPI-Translator'} = $version;
         $app_name = $opts['app']->fullname ?: 'A Moodle site';
+
         return [[
             'user_id' => $opts['user']->id,
             'user_url' => $opts['user']->url,
-            'user_name' => $opts['user']->username,
-            'context_lang' => $opts['course']->lang,
+            'user_name' => $opts['user']->fullname,
+            'context_lang' => is_null($opts['course']->lang)
+                || $opts['course']->lang == '' ? "en" : $opts['course']->lang,
             'context_platform' => 'Moodle',
             'context_ext' => $opts['event'],
             'context_ext_key' => 'http://lrs.learninglocker.net/define/extensions/moodle_logstore_standard_log',
