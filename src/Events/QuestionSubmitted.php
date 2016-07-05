@@ -80,6 +80,12 @@ class QuestionSubmitted extends AttemptStarted {
              $translatorevent = $this->numericStatement($translatorevent, $questionAttempt, $question);
         }
 
+        if (strpos($question->qtype, 'calculated') === 0) {
+            $translatorevent['question_url'] .= '&variant='.$questionAttempt->variant;
+            $translatorevent['question_name'] .= ' - variant '.$questionAttempt->variant;
+            $translatorevent['question_description'] .= ' - variant '.$questionAttempt->variant;
+        }
+
         return array_merge($template, $translatorevent);
     }
 
@@ -201,16 +207,52 @@ class QuestionSubmitted extends AttemptStarted {
     public function numericStatement($translatorevent, $questionAttempt, $question) {
 
         $translatorevent['interaction_type'] = 'numeric';
+
+
+        $correctAnswerId = null;
+        foreach ($question->answers as $answer) {
+            if (intval($answer->fraction === 1)) {
+                $correctAnswerId = $answer->id;
+            }
+        }
+
         $tolerance = 0;
+        $toleranceType = 2;
+        $answersdata = [];
         if ($question->qtype == "numerical") {
-            $tolerance = floatval($question->numerical->tolerance);
+            $answersdata = $question->numerical->answers;
         } else if (strpos($question->qtype, 'calculated') === 0) {
-            $tolerance = floatval($question->calculated->tolerance);
+            $answersdata = $question->calculated->answers;
+        }
+
+        if (!is_null($correctAnswerId) && count($answersdata) > 0) {
+            foreach ($answersdata as $answerdata) {
+                if ($answerdata->answer == $correctAnswerId) {
+                    $tolerance = floatval($answerdata->tolerance);
+                    if isset($answerdata->tolerancetype) {
+                        $toleranceType = intval($answerdata->tolerancetype);
+                    }
+                }
+            }
         }
 
         $rigthtanswer = floatval($questionAttempt->rightanswer);
         if ($tolerance > 0) {
-            $rigthtanswerstring = strval($rigthtanswer - $tolerance) . '[:]' . strval($rigthtanswer + $tolerance);
+            $toleranceMax = $rigthtanswer + $tolerance;
+            $toleranceMin = $rigthtanswer - $tolerance;
+            switch ($toleranceType) {
+                case 1:
+                    $toleranceMax = $rigthtanswer + ($rigthtanswer * $tolerance);
+                    $toleranceMin = $rigthtanswer - ($rigthtanswer * $tolerance);
+                    break;
+                case 3:
+                    $toleranceMax = $rigthtanswer + ($rigthtanswer * $tolerance);
+                    $toleranceMin = $rigthtanswer / (1 + $tolerance);
+                    break;
+                default:
+                    break;
+            }
+            $rigthtanswerstring = strval($toleranceMin) . '[:]' . strval($toleranceMax);
             $translatorevent['interaction_correct_responses'] = [$rigthtanswerstring];
         } else {
             $translatorevent['interaction_correct_responses'] = [$questionAttempt->rightanswer];
