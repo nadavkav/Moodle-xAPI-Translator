@@ -50,8 +50,10 @@ class QuestionSubmitted extends AttemptStarted {
             'attempt_score_scaled' => 0, //default
             'attempt_score_raw' => 0, //default
             'attempt_score_min' => 0, //always 0
-            'attempt_score_max' => $questionAttempt->maxmark,
+            'attempt_score_max' => floatval($questionAttempt->maxmark),
             'attempt_response' => $questionAttempt->responsesummary, //default
+            'interaction_correct_responses' => [$questionAttempt->rightanswer], //default
+            'interaction_type' => 'other', //default
         ];
 
         $submittedState = $this->getLastState($questionAttempt);
@@ -62,13 +64,18 @@ class QuestionSubmitted extends AttemptStarted {
 
         $translatorevent = $this->resultFromState($translatorevent, $questionAttempt, $submittedState);
 
-        // Where possible, determine xAPI question type based on available data rather than $question->qtype.
-        if (!is_null($question->answers) && ($question->answers !== [])) {
-            $translatorevent = $this->multichoiceStatement($translatorevent, $questionAttempt, $question);
-        } else {
+        // Add question types that have answers but should not be handled as choice or true/false here.
+        $notmultichoice = [
+            'numerical'
+        ];
 
-            // Other question type.
-            $translatorevent['interaction_type'] = "other";
+        // Where possible, handle the question as a 'choice' question.
+        if (!is_null($question->answers) && ($question->answers !== []) && (!in_array($question->qtype, $notmultichoice))) {
+            $translatorevent = $this->multichoiceStatement($translatorevent, $questionAttempt, $question);
+        } else if ($question->qtype == 'match') {
+             $translatorevent = $this->matchStatement($translatorevent, $questionAttempt, $question);
+        } else if ($question->qtype == 'numerical') {
+             $translatorevent = $this->numericStatement($translatorevent, $questionAttempt, $question);
         }
 
         return array_merge($template, $translatorevent);
@@ -82,6 +89,8 @@ class QuestionSubmitted extends AttemptStarted {
      * @return [String => Mixed]
      */
     public function resultFromState($translatorevent, $questionAttempt, $submittedState) {
+        $scaledScore = $submittedState->fraction;
+        $rawScore = $scaledScore * floatval($questionAttempt->maxmark);
         switch ($submittedState->state) {
             case "todo":
                 $translatorevent['attempt_completed'] = false;
@@ -98,20 +107,20 @@ class QuestionSubmitted extends AttemptStarted {
             case "gradedwrong":
                 $translatorevent['attempt_completed'] = true;
                 $translatorevent['attempt_success'] = false;
-                $translatorevent['attempt_score_scaled'] = $submittedState->fraction;
-                $translatorevent['attempt_score_raw'] = $submittedState->fraction * $questionAttempt->maxmark;
+                $translatorevent['attempt_score_scaled'] = $scaledScore;
+                $translatorevent['attempt_score_raw'] = $rawScore;
                 break;
             case "gradedpartial":
                 $translatorevent['attempt_completed'] = true;
                 $translatorevent['attempt_success'] = false;
-                $translatorevent['attempt_score_scaled'] = $submittedState->fraction;
-                $translatorevent['attempt_score_raw'] = $submittedState->fraction * $questionAttempt->maxmark;
+                $translatorevent['attempt_score_scaled'] = $scaledScore;
+                $translatorevent['attempt_score_raw'] = $rawScore;
                 break;
             case "gradedright":
                 $translatorevent['attempt_completed'] = true;
                 $translatorevent['attempt_success'] = true;
-                $translatorevent['attempt_score_scaled'] = $submittedState->fraction;
-                $translatorevent['attempt_score_raw'] = $submittedState->fraction * $questionAttempt->maxmark;
+                $translatorevent['attempt_score_scaled'] = $scaledScore;
+                $translatorevent['attempt_score_raw'] = $rawScore;
                 break;
             default:
                 $translatorevent['attempt_completed'] = null;
@@ -131,8 +140,8 @@ class QuestionSubmitted extends AttemptStarted {
      */
     public function multichoiceStatement($translatorevent, $questionAttempt, $question) {
         $choices = [];
-        foreach ($question->answers as $answerId => $answer) {
-            $choices['moodle_quiz_question_answer_'.$answerId] = strip_tags($answer->answer);
+        foreach ($question->answers as $answer) {
+            $choices['moodle_quiz_question_answer_'.$answer->id] = strip_tags($answer->answer);
         }
 
         // If there are answers, assume multiple choice until proven otherwise.
@@ -140,25 +149,15 @@ class QuestionSubmitted extends AttemptStarted {
         $translatorevent['interaction_choices'] = $choices;
 
         $responses = [];
+        $correctResponses = [];
 
         // We can't simply explode $questionAttempt->responsesummary because responses may contain "; ". 
         foreach ($choices as $answerId => $choice) {
-            $choicePos = strpos($questionAttempt->responsesummary, $choice);
-            if (
-                // Check if choice is contained in the learner's response
-                !($choicePos === false) 
-                // Check choice is prefixed with "; " or at start of string. 
-                && (
-                    ($choicePos == 0)
-                    || (substr($questionAttempt->responsesummary, $choicePos - 2, 2) == "; ")
-                )
-                // Check choice is follow by "; " or at end of string. 
-                && (
-                    ($choicePos == strlen($questionAttempt->responsesummary) -  strlen($choice))
-                    || (substr($questionAttempt->responsesummary, $choicePos + strlen($choice), 2) == "; ")
-                )
-            ) {
+            if ($this->inResponsesSummary($questionAttempt->responsesummary, $choice, '; ', '; ')) {
                 array_push($responses, $answerId);
+            }
+            if (!(strpos($questionAttempt->rightanswer, $choice) === false)) {
+                array_push($correctResponses, $answerId);
             }
         }
 
@@ -166,12 +165,6 @@ class QuestionSubmitted extends AttemptStarted {
             $translatorevent['attempt_response'] = implode('[,]', $responses);
         }
 
-        $correctResponses = [];
-        foreach ($choices as $answerId => $choice) {
-            if (!(strpos($questionAttempt->rightanswer, $choice) === false)) {
-                array_push($correctResponses, $answerId);
-            }
-        }
         $translatorevent['interaction_correct_responses'] = [implode('[,]', $correctResponses)];
 
         // Special handling of true-false question type (some overlap with multichoice).
@@ -195,6 +188,87 @@ class QuestionSubmitted extends AttemptStarted {
     }
 
     /**
+     * Add data specifc to numeric question types to a translator event.
+     * @param [String => Mixed] $translatorevent
+     * @param PHPObj $questionAttempt
+     * @param PHPObj $question
+     * @return [String => Mixed]
+     */
+    public function numericStatement($translatorevent, $questionAttempt, $question) {
+
+        $translatorevent['interaction_type'] = 'numeric';
+        $tolerance = floatval($question->numerical->tolerance);
+        $rigthtanswer = floatval($questionAttempt->rightanswer);
+        if ($tolerance > 0) {
+            $rigthtanswerstring = strval($rigthtanswer - $tolerance) . '[:]' . strval($rigthtanswer + $tolerance);
+            $translatorevent['interaction_correct_responses'] = [$rigthtanswerstring];
+        } else {
+            $translatorevent['interaction_correct_responses'] = [$questionAttempt->rightanswer];
+        }
+
+        return $translatorevent;
+    }
+
+    /**
+     * Add data specifc to matching question types to a translator event.
+     * @param [String => Mixed] $translatorevent
+     * @param PHPObj $questionAttempt
+     * @param PHPObj $question
+     * @return [String => Mixed]
+     */
+    public function matchStatement($translatorevent, $questionAttempt, $question) {
+
+        $translatorevent['interaction_type'] = 'matching';
+
+        $targets = [];
+        $sources = [];
+        $correctResponses = [];
+        $responseTargetsPos = [];
+        $responseSourcesPos = [];
+
+        foreach ($question->match->subquestions as $subquestion) {
+            $target = strip_tags($subquestion->questiontext);
+            $source = strip_tags($subquestion->answertext);
+            $targetId = 'moodle_quiz_question_target_'.$subquestion->id;
+            $sourceId = 'moodle_quiz_question_source_'.$subquestion->id;
+            $targets[$targetId] = $target;
+            $sources[$sourceId] = $source;
+            array_push(
+                $correctResponses, 
+                $sourceId.'[.]'.$targetId
+            );
+
+            // Get the positions of the target and source within the response string.
+            $responseTargetsPos[strpos($questionAttempt->responsesummary, $target)] = $targetId;
+            $responseSourcesPos[strpos($questionAttempt->responsesummary, $source)] = $sourceId;
+        }
+
+        // Get ordered and indexed lists of target and source.
+        ksort($responseTargetsPos);
+        $responseTargets = array_values($responseTargetsPos);
+        ksort($responseSourcesPos);
+        $responseSources = array_values($responseSourcesPos);
+
+        $translatorevent['attempt_response'] = '';
+        if (count($responseTargets) == count($responseSources) && count($responseTargets) > 0) {
+            $responses = [];
+            foreach ($responseTargets as $index => $targetId) {
+                array_push(
+                    $responses,
+                    $responseSources[$index].'[.]'.$targetId
+                );
+            }
+            $translatorevent['attempt_response'] = implode('[,]', $responses);
+        }
+
+        $translatorevent['interaction_target'] = $targets;
+        $translatorevent['interaction_source'] = $sources;
+        $translatorevent['interaction_correct_responses'] = [implode('[,]', $correctResponses)];
+
+        return $translatorevent;
+    }
+
+    /**
      * Get pertient data from the last recorded step of a learners interactions within a question attempt.
      * @param PHPObj $questionAttempt
      * @return [String => Mixed]
@@ -214,15 +288,36 @@ class QuestionSubmitted extends AttemptStarted {
         foreach ($questionAttempt->steps as $stepId => $step) {
             if ($step->sequencenumber > $sequencenumber) {
 
-                // Now this step has the highest sequence number we've seen. 
+                // Now this step has the highest sequence number we've seen.
                 $sequencenumber = $step->sequencenumber;
                 $state = (object)[
                     "state" => $step->state,
                     "timestamp" => $step->timecreated,
-                    "fraction" => $step->fraction
+                    "fraction" => (is_null($step->fraction) || $step->fraction == '') ? 0 : floatval($step->fraction)
                 ];
             }
         }
         return $state;
+    }
+
+    private function inResponsesSummary($haystack, $needle, $leftDelim, $rightDelim) {
+        $needlePos = strpos($haystack, $needle);
+        if (
+            // Check if choice is contained in the learner's response
+            !($needlePos === false)
+            // Check choice is prefixed with left delimiter or at start of string.
+            && (
+                ($needlePos == 0)
+                || (substr($haystack, $needlePos - strlen($leftDelim), strlen($leftDelim)) == $leftDelim)
+            )
+            // Check choice is follow by right delimiter or at end of string.
+            && (
+                ($needlePos == strlen($haystack) -  strlen($haystack))
+                || (substr($haystack, $needlePos + strlen($haystack), strlen($rightDelimDelim)) == $rightDelim)
+            )
+        ) {
+            return true;
+        }
+        return false;
     }
 }
