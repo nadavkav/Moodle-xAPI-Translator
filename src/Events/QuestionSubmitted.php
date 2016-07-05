@@ -64,17 +64,19 @@ class QuestionSubmitted extends AttemptStarted {
 
         $translatorevent = $this->resultFromState($translatorevent, $questionAttempt, $submittedState);
 
-        // Add question types that have answers but should not be handled as choice or true/false here.
-        $notmultichoice = [
-            'numerical'
+        $numerictypes = [
+            'numerical',
+            'calculated',
+            'calculatedmultichoice',
+            'calculatedsimple'
         ];
 
         // Where possible, handle the question as a 'choice' question.
-        if (!is_null($question->answers) && ($question->answers !== []) && (!in_array($question->qtype, $notmultichoice))) {
+        if (!is_null($question->answers) && ($question->answers !== []) && (!in_array($question->qtype, $numerictypes))) {
             $translatorevent = $this->multichoiceStatement($translatorevent, $questionAttempt, $question);
         } else if ($question->qtype == 'match') {
              $translatorevent = $this->matchStatement($translatorevent, $questionAttempt, $question);
-        } else if ($question->qtype == 'numerical') {
+        } else if (in_array($question->qtype, $numerictypes)) {
              $translatorevent = $this->numericStatement($translatorevent, $questionAttempt, $question);
         }
 
@@ -184,6 +186,8 @@ class QuestionSubmitted extends AttemptStarted {
                 $translatorevent['interaction_correct_responses'] = ['false'];
             }
         }
+
+
         return $translatorevent;
     }
 
@@ -197,7 +201,13 @@ class QuestionSubmitted extends AttemptStarted {
     public function numericStatement($translatorevent, $questionAttempt, $question) {
 
         $translatorevent['interaction_type'] = 'numeric';
-        $tolerance = floatval($question->numerical->tolerance);
+        $tolerance = 0;
+        if ($question->qtype == "numerical") {
+            $tolerance = floatval($question->numerical->tolerance);
+        } else if (strpos($question->qtype, 'calculated') === 0) {
+            $tolerance = floatval($question->calculated->tolerance);
+        }
+
         $rigthtanswer = floatval($questionAttempt->rightanswer);
         if ($tolerance > 0) {
             $rigthtanswerstring = strval($rigthtanswer - $tolerance) . '[:]' . strval($rigthtanswer + $tolerance);
