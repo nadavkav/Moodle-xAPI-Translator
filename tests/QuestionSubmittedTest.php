@@ -23,14 +23,20 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
     private function constructQuestionAttempts() {
         return [
-            $this->constructQuestionAttempt(1),
-            $this->constructQuestionAttempt(2),
-            $this->constructQuestionAttempt(3)
+            $this->constructQuestionAttempt(1, 'multichoice'),
+            $this->constructQuestionAttempt(2, 'calculated'),
+            $this->constructQuestionAttempt(3, 'calculatedmulti'),
+            $this->constructQuestionAttempt(4, 'calculatedsimple'),
+            $this->constructQuestionAttempt(5, 'randomsamatch'),
+            $this->constructQuestionAttempt(6, 'match'),
+            $this->constructQuestionAttempt(7, 'shortanswer'),
+            $this->constructQuestionAttempt(8, 'somecustomquestiontypethatsnotstandardinmoodle'),
+            $this->constructQuestionAttempt(9, 'someothertypewithnoanswers')
         ];
     }
 
-    private function constructQuestionAttempt($index) {
-        return (object) [
+    private function constructQuestionAttempt($index, $qtype) {
+         $questionAttempt (object) [
             'id' => 1,
             'questionid' => 1,
             'maxmark' => '5.0000000',
@@ -51,34 +57,136 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             'responsesummary' => 'test answer',
             'rightanswer' => 'test answer'
         ];
+
+
+        $notchoicetypes = [
+            'numerical',
+            'calculated',
+            'calculatedmulti',
+            'calculatedsimple',
+            'shortanswer'
+        ];
+
+        $matchtypes = [
+            'randomsamatch',
+            'match'
+        ];
+
+        if (in_array($question->qtype, $matchtypes)) {
+             $questionAttempt->responsesummary = 'test question -> test answer; test question 2 -> test answer 2';
+             $questionAttempt->rightanswer = 'test question -> test answer; test question 2 -> test answer 2';
+        } else if (!is_null($question->answers) && ($question->answers !== []) && !in_array($question->qtype, $notchoicetypes)) {
+           $questionAttempt->responsesummary = 'test answer; test answer 2';
+             $questionAttempt->rightanswer = 'test answer; test answer 2';
+        }
+
+        return $questionAttempt;
     }
 
     private function constructQuestions() {
         return [
-            $this->constructQuestion(1),
-            $this->constructQuestion(2),
-            $this->constructQuestion(3)
+            $this->constructQuestion(1, 'multichoice'),
+            $this->constructQuestion(2, 'calculated'),
+            $this->constructQuestion(3, 'calculatedmulti'),
+            $this->constructQuestion(4, 'calculatedsimple'),
+            $this->constructQuestion(5, 'randomsamatch'),
+            $this->constructQuestion(6, 'match'),
+            $this->constructQuestion(7, 'shortanswer'),
+            $this->constructQuestion(8, 'somecustomquestiontypethatsnotstandardinmoodle'),
+            $this->constructQuestion(9, 'someothertypewithnoanswers'),
+            $this->constructQuestion(10, 'shortanswer'),
         ];
     }
 
-    private function constructQuestion($index) {
-        return (object) [
-            'id' => 1,
+    private function constructQuestion($index, $qtype) {
+        $question = (object) [
+            'id' => $index,
             'name' => 'test question {$index}',
-            'questiontext' => 'test questiontext',
-            'url' => 'http://localhost/moodle/question/question.php?id=23',
+            'questiontext' => 'test question',
+            'url' => 'http://localhost/moodle/question/question.php?id='.$index,
             'answers' => [
                 '1'=> (object)[
                     'id' => '1',
                     'answer' => 'test answer'
                 ],
-                '2'=> (object)[
+                '1'=> (object)[
                     'id' => '2',
+                    'answer' => 'test answer 2'
+                ],
+                '2'=> (object)[
+                    'id' => '3',
                     'answer' => 'wrong test answer'
                 ]
             ],
-            'qtype' => 'multichoice'
+            'qtype' => $qtype
         ];
+
+        if ($question->qtype == 'numerical') {
+            $question->numerical = (object)[
+                'answers' => [
+                    '1'=> (object)[
+                        'id' => '1',
+                        'answer' => '5',
+                        'tolerance' => '1'
+                    ],
+                    '2'=> (object)[
+                        'id' => '2',
+                        'answer' => '10',
+                        'tolerance' => '0'
+                    ]
+                ]
+            ];
+        } else if ($question->qtype == 'match') {
+            $question->match = (object)[
+                'subquestions' => [
+                    '1'=> (object)[
+                        'id' => '1',
+                        'questiontext' => '<p>test question</p>',
+                        'answertext' => '<p>test answer</p>'
+                    ],
+                    '2'=> (object)[
+                        'id' => '2',
+                        'questiontext' => '<p>test question 2</p>',
+                        'answertext' => '<p>test answer 2</p>'
+                    ]
+                ]
+            ];
+        } else if (strpos($question->qtype, 'calculated') === 0) {
+            $question->calculated = (object)[
+                'answers' => [
+                    '1'=> (object)[
+                        'id' => '1',
+                        'answer' => '5',
+                        'tolerance' => '1'
+                    ],
+                    '2'=> (object)[
+                        'id' => '2',
+                        'answer' => '10',
+                        'tolerance' => '0'
+                    ]
+                ]
+            ];
+        } else if ($question->qtype == 'shortanswer') {
+            $question->shortanswer = (object)[
+                'options' => (object)[
+                    'usecase' => '0'
+                ]
+            ];
+        } else if ($question->qtype == 'someothertypewithnoanswers') {
+            unset($question->answers)
+        }
+
+        if ($index == 10) {
+            $question->questiontext = 'test question 2';
+            $question->answers = [
+                '1'=> (object)[
+                    'id' => '1',
+                    'answer' => 'test answer 2'
+                ]
+            ]
+        }
+
+        return $question;
     }
 
     protected function assertOutputs($input, $output) {
