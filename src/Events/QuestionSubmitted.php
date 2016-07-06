@@ -12,17 +12,32 @@ class QuestionSubmitted extends AttemptStarted {
 
         // Push question statements to $translatorevents['events'].
         foreach ($opts['attempt']->questions as $questionId => $questionAttempt) {
+            $question = $this->expandQuestion(
+                $opts['questions'][$questionAttempt->questionid],
+                $opts['questions']
+            );
             array_push(
                 $translatorevents,
                 $this->questionStatement(
                     parent::read($opts)[0],
                     $questionAttempt,
-                    $opts['questions'][$questionAttempt->questionid]
+                    $question
                 )
             );
         }
 
         return $translatorevents;
+    }
+
+    /**
+     * For certain question types, expands question data by pulling from other questions. 
+     * @param PHPObj $question
+     * @param Array $questions
+     * @return PHPObj $question
+     */
+    protected function expandQuestion($question, $questions) {
+
+        return $question;
     }
 
     /**
@@ -71,13 +86,23 @@ class QuestionSubmitted extends AttemptStarted {
             'calculatedsimple'
         ];
 
-        // Where possible, handle the question as a 'choice' question.
-        if (!is_null($question->answers) && ($question->answers !== []) && (!in_array($question->qtype, $numerictypes))) {
-            $translatorevent = $this->multichoiceStatement($translatorevent, $questionAttempt, $question);
-        } else if ($question->qtype == 'match') {
+        $matchtypes = [
+            'randomsamatch',
+            'match'
+        ];
+
+        $fillintypes = [
+            'shortanswer'
+        ];
+
+        if (in_array($question->qtype, $matchtypes)) {
              $translatorevent = $this->matchStatement($translatorevent, $questionAttempt, $question);
         } else if (in_array($question->qtype, $numerictypes)) {
              $translatorevent = $this->numericStatement($translatorevent, $questionAttempt, $question);
+        } else if (in_array($question->qtype, $fillintypes)) {
+             $translatorevent = $this->shortanswerStatement($translatorevent, $questionAttempt, $question);
+        } else if (!is_null($question->answers) && ($question->answers !== [])) {
+            $translatorevent = $this->multichoiceStatement($translatorevent, $questionAttempt, $question);
         }
 
         if (strpos($question->qtype, 'calculated') === 0) {
@@ -256,6 +281,27 @@ class QuestionSubmitted extends AttemptStarted {
             $translatorevent['interaction_correct_responses'] = [$rigthtanswerstring];
         } else {
             $translatorevent['interaction_correct_responses'] = [$questionAttempt->rightanswer];
+        }
+
+        return $translatorevent;
+    }
+
+    /**
+     * Add data specifc to shortanswer question types to a translator event.
+     * @param [String => Mixed] $translatorevent
+     * @param PHPObj $questionAttempt
+     * @param PHPObj $question
+     * @return [String => Mixed]
+     */
+    public function shortanswerStatement($translatorevent, $questionAttempt, $question) {
+
+        $translatorevent['interaction_type'] = 'fill-in';
+        $translatorevent['interaction_correct_responses'] = [];
+
+        foreach ($question->answers as $answer) {
+            if (intval($answer->fraction) === 1) {
+                array_push($translatorevent['interaction_correct_responses'], $answer->answer);
+            }
         }
 
         return $translatorevent;
