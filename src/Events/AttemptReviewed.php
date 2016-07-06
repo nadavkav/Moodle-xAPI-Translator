@@ -15,28 +15,30 @@ class AttemptReviewed extends AttemptStarted {
         $scoreMax = (float) ($opts['grade_items']->grademax ?: 0);
         $scorePass = (float) ($opts['grade_items']->gradepass ?: null);
         $success = false;
-        //if there is no passing score then success is unknown.
+        // If there is no passing score then success is unknown.
         if ($scorePass == null) {
             $success = null;
         }
         elseif ($scoreRaw >= $scorePass) {
             $success = true;
         }
-        //Calculate scaled score as the distance from zero towards the max (or min for negative scores).
+
+        // It's possible to configure Moodle quizzes such that you can score higher than the maximum grade. 
+        // This is not allowed by xAPI, so cap the raw at the min/max. 
+        if ($scoreRaw > $scoreMax) {
+            $scoreRaw = $scoreMax;
+        }
+        if ($scoreRaw < $scoreMin) {
+            $scoreRaw = $scoreMin;
+        }
+
+        // Calculate scaled score as the distance from zero towards the max (or min for negative scores).
         $scoreScaled;
         if ($scoreRaw >= 0) {
             $scoreScaled = $scoreRaw / $scoreMax;
         }
         else {
             $scoreScaled = $scoreRaw / $scoreMin;
-        }
-
-        // It's possible to configure Moodle quizzes such that you can score higher than the maximum grade. 
-        if ($scoreScaled > 1) {
-            $scoreScaled = 1;
-        }
-        if ($scoreScaled < -1) {
-            $scoreScaled = -1;
         }
 
         return [array_merge(parent::read($opts)[0], [
