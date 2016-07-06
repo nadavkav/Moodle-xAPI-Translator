@@ -67,7 +67,7 @@ class QuestionSubmitted extends AttemptStarted {
         $numerictypes = [
             'numerical',
             'calculated',
-            'calculatedmultichoice',
+            'calculatedmulti',
             'calculatedsimple'
         ];
 
@@ -211,7 +211,7 @@ class QuestionSubmitted extends AttemptStarted {
 
         $correctAnswerId = null;
         foreach ($question->answers as $answer) {
-            if (intval($answer->fraction === 1)) {
+            if (intval($answer->fraction) === 1) {
                 $correctAnswerId = $answer->id;
             }
         }
