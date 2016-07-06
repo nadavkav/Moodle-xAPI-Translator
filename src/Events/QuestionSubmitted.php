@@ -36,7 +36,31 @@ class QuestionSubmitted extends AttemptStarted {
      * @return PHPObj $question
      */
     protected function expandQuestion($question, $questions) {
+        if ($question->qtype == 'randomsamatch') {
+            $subquestions = [];
+            foreach ($questions as $otherquestion) {
+                if ($otherquestion->qtype == 'shortanswer') {
+                    foreach ($otherquestion->answers as $answer) {
+                        if (intval($answer->fraction) === 1) {
+                            array_push(
+                                $subquestions, 
+                                (object) [
+                                    "id" => $answer->id,
+                                    "questiontext" => $otherquestion->questiontext,
+                                    "answertext" => $answer->answer
+                                ]
+                            );
+                            // Only take the first correct answer because that's what Moodle does. 
+                            break;
+                        }
+                    }
+                } 
+            }
 
+            $question->match = (object) [
+             'subquestions' => $subquestions
+            ];
+        }
         return $question;
     }
 
@@ -300,7 +324,13 @@ class QuestionSubmitted extends AttemptStarted {
 
         foreach ($question->answers as $answer) {
             if (intval($answer->fraction) === 1) {
-                array_push($translatorevent['interaction_correct_responses'], $answer->answer);
+                $correctResponse;
+                if ($question->shortanswer->options->usecase == '1') {
+                    $correctResponse = '{case_matters=true}'.$answer->answer;
+                } else {
+                    $correctResponse = '{case_matters=false}'.$answer->answer;
+                }
+                array_push($translatorevent['interaction_correct_responses'], $correctResponse);
             }
         }
 
