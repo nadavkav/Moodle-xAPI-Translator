@@ -85,16 +85,16 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
     private function constructQuestions() {
         return [
-            $this->constructQuestion(1, 'multichoice'),
-            $this->constructQuestion(2, 'calculated'),
-            $this->constructQuestion(3, 'calculatedmulti'),
-            $this->constructQuestion(4, 'calculatedsimple'),
-            $this->constructQuestion(5, 'randomsamatch'),
-            $this->constructQuestion(6, 'match'),
-            $this->constructQuestion(7, 'shortanswer'),
-            $this->constructQuestion(8, 'somecustomquestiontypethatsnotstandardinmoodle'),
-            $this->constructQuestion(9, 'someothertypewithnoanswers'),
-            $this->constructQuestion(10, 'shortanswer'),
+            '01' => $this->constructQuestion('01', 'multichoice'),
+            '02' => $this->constructQuestion('02', 'calculated'),
+            '03' => $this->constructQuestion('03', 'calculatedmulti'),
+            '04' => $this->constructQuestion('04', 'calculatedsimple'),
+            '05' => $this->constructQuestion('05', 'randomsamatch'),
+            '06' => $this->constructQuestion('06', 'match'),
+            '07' => $this->constructQuestion('07', 'shortanswer'),
+            '08' => $this->constructQuestion('08', 'somecustomquestiontypethatsnotstandardinmoodle'),
+            '09' => $this->constructQuestion('09', 'someothertypewithnoanswers'),
+            '10' => $this->constructQuestion('10', 'shortanswer'),
         ];
     }
 
@@ -176,7 +176,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             unset($question->answers)
         }
 
-        if ($index == 10) {
+        if ($index == '10') {
             $question->questiontext = 'test question 2';
             $question->answers = [
                 '1'=> (object)[
@@ -198,8 +198,10 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
     protected function assertOutput($input, $output) {
         parent::assertOutput($input, $output);
+        $questionindex = substr($output['question_name'], 14, 2);
         $this->assertAttempt($input['attempt'], $output);
-        $this->assertQuestion($input['questions'], $output);
+        $this->assertQuestion($input['questions'][$questionindex], $output);
+
     }
 
     protected function assertAttempt($input, $output) {
