@@ -30,6 +30,15 @@ class AttemptReviewed extends AttemptStarted {
         else {
             $scoreScaled = $scoreRaw / $scoreMin;
         }
+
+        // It's possible to configure Moodle quizzes such that you can score higher than the maximum grade. 
+        if ($scoreScaled > 1) {
+            $scoreScaled = 1;
+        }
+        if ($scoreScaled < -1) {
+            $scoreScaled = -1;
+        }
+
         return [array_merge(parent::read($opts)[0], [
             'recipe' => 'attempt_completed',
             'attempt_score_raw' => $scoreRaw,
