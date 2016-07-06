@@ -229,7 +229,7 @@ class QuestionSubmitted extends AttemptStarted {
             foreach ($answersdata as $answerdata) {
                 if ($answerdata->answer == $correctAnswerId) {
                     $tolerance = floatval($answerdata->tolerance);
-                    if isset($answerdata->tolerancetype) {
+                    if (isset($answerdata->tolerancetype)) {
                         $toleranceType = intval($answerdata->tolerancetype);
                     }
                 }
