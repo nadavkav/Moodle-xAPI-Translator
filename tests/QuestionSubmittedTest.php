@@ -36,7 +36,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
     }
 
     private function constructQuestionAttempt($index, $qtype) {
-         $questionAttempt (object) [
+         $questionAttempt = (object) [
             'id' => 1,
             'questionid' => 1,
             'maxmark' => '5.0000000',
