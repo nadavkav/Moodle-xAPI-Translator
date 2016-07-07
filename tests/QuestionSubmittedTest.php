@@ -300,7 +300,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             // Multichoice
             $this->assertEquals(
                 strip_tags(
-                    $question->answers['1']->answer,.'[,]'
+                    $question->answers['1']->answer.'[,]'
                     .$question->answers['2']->answer
                 $output['interaction_correct_responses'][0]
             );
