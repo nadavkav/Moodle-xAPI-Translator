@@ -441,7 +441,7 @@ class QuestionSubmitted extends AttemptStarted {
             // Check choice is follow by right delimiter or at end of string.
             && (
                 ($needlePos == strlen($haystack) -  strlen($haystack))
-                || (substr($haystack, $needlePos + strlen($haystack), strlen($rightDelimDelim)) == $rightDelim)
+                || (substr($haystack, $needlePos + strlen($haystack), strlen($rightDelim)) == $rightDelim)
             )
         ) {
             return true;
