@@ -57,7 +57,8 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 ],
             ],
             'responsesummary' => 'test answer',
-            'rightanswer' => 'test answer'
+            'rightanswer' => 'test answer',
+            'variant' => '1'
         ];
 
         $choicetypes = [
