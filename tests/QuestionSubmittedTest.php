@@ -192,7 +192,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 ]
             ];
         } else if ($question->qtype == 'someothertypewithnoanswers') {
-            unset($question->answers);
+            $question->answers = [];
         } else if ($question->qtype == 'truefalse') {
             $question->answers = [
                 '1'=> (object)[
