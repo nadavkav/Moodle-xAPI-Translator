@@ -224,7 +224,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
     protected function assertOutputs($input, $output) {
         //output is an associative array
         $this->assertEquals(0, count(array_filter(array_keys($output), 'is_string')));
-        $this->assertEquals(count($input['questions']) + 1 , count($output));
+        $this->assertEquals(count($input['questions']) , count($output));
     }
 
     protected function assertOutput($input, $output) {
