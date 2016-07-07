@@ -291,7 +291,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 $question->answers['2']->answer, 
                 $output['interaction_correct_responses'][1]
             );
-        } else if ($question->qtype == 'truefalse')) {
+        } else if ($question->qtype == 'truefalse') {
             $this->assertEquals(
                 $question->answers['1']->answer, 
                 $output['interaction_correct_responses'][0]
@@ -314,8 +314,23 @@ class QuestionSubmittedTest extends AttemptStartedTest {
     protected function assertQuestion($input, $output) {
         $this->assertEquals($input->name, $output['question_name']);
         $this->assertEquals($input->questiontext, $output['question_description']);
-        $this->assertEquals($input->url, $output['question_url']);
-        $this->assertEquals($input->qtype, $output['interaction_type']);
+        if (strpos($input->qtype, 'calculated') === 0) {
+            $this->assertEquals($input->url.'&variant=1', $output['question_url']);
+        } else {
+            $this->assertEquals($input->url, $output['question_url']);
+        }
+
+        $otherQTypes = [
+            'somecustomquestiontypethatsnotstandardinmoodle',
+            'someothertypewithnoanswers'
+        ];
+        if (in_array($input->qtype, $otherQTypes)) {
+            $this->assertEquals('other', $output['interaction_type']);
+        }
+        else {
+            $this->assertEquals($input->qtype, $output['interaction_type']);
+        }
+        
         $this->assertEquals($input->answers['2']->answer, $output['interaction_choices']['moodle_quiz_question_answer_2']);
     }
 }
