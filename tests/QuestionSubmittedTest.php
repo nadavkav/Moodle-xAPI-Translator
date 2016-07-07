@@ -23,22 +23,24 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
     private function constructQuestionAttempts() {
         return [
-            $this->constructQuestionAttempt(1, 'multichoice'),
-            $this->constructQuestionAttempt(2, 'calculated'),
-            $this->constructQuestionAttempt(3, 'calculatedmulti'),
-            $this->constructQuestionAttempt(4, 'calculatedsimple'),
-            $this->constructQuestionAttempt(5, 'randomsamatch'),
-            $this->constructQuestionAttempt(6, 'match'),
-            $this->constructQuestionAttempt(7, 'shortanswer'),
-            $this->constructQuestionAttempt(8, 'somecustomquestiontypethatsnotstandardinmoodle'),
-            $this->constructQuestionAttempt(9, 'someothertypewithnoanswers')
+            '01' => $this->constructQuestionAttempt('01', 'multichoice'),
+            '02' => $this->constructQuestionAttempt('02', 'calculated'),
+            '03' => $this->constructQuestionAttempt('03', 'calculatedmulti'),
+            '04' => $this->constructQuestionAttempt('04', 'calculatedsimple'),
+            '05' => $this->constructQuestionAttempt('05', 'randomsamatch'),
+            '06' => $this->constructQuestionAttempt('06', 'match'),
+            '07' => $this->constructQuestionAttempt('07', 'shortanswer'),
+            '08' => $this->constructQuestionAttempt('08', 'somecustomquestiontypethatsnotstandardinmoodle'),
+            '09' => $this->constructQuestionAttempt('09', 'someothertypewithnoanswers'),
+            '10' => $this->constructQuestionAttempt('10', 'shortanswer'),
+            '11' => $this->constructQuestionAttempt('11', 'truefalse')
         ];
     }
 
     private function constructQuestionAttempt($index, $qtype) {
          $questionAttempt = (object) [
-            'id' => 1,
-            'questionid' => 1,
+            'id' => $index,
+            'questionid' => $index,
             'maxmark' => '5.0000000',
             'steps' => [
                 (object)[
@@ -58,13 +60,9 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             'rightanswer' => 'test answer'
         ];
 
-
-        $notchoicetypes = [
-            'numerical',
-            'calculated',
-            'calculatedmulti',
-            'calculatedsimple',
-            'shortanswer'
+        $choicetypes = [
+            'multichoice',
+            'truefalse'
         ];
 
         $matchtypes = [
@@ -72,12 +70,15 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             'match'
         ];
 
-        if (in_array($question->qtype, $matchtypes)) {
-             $questionAttempt->responsesummary = 'test question -> test answer; test question 2 -> test answer 2';
-             $questionAttempt->rightanswer = 'test question -> test answer; test question 2 -> test answer 2';
-        } else if (!is_null($question->answers) && ($question->answers !== []) && !in_array($question->qtype, $notchoicetypes)) {
-           $questionAttempt->responsesummary = 'test answer; test answer 2';
-             $questionAttempt->rightanswer = 'test answer; test answer 2';
+        if (in_array($qtype, $matchtypes)) {
+            $questionAttempt->responsesummary = 'test question -> test answer; test question 2 -> test answer 2';
+            $questionAttempt->rightanswer = 'test question -> test answer; test question 2 -> test answer 2';
+        } else if (in_array($qtype, $choicetypes)) {
+            $questionAttempt->responsesummary = 'test answer; test answer 2';
+            $questionAttempt->rightanswer = 'test answer; test answer 2';
+        } else if ($qtype == 'truefalse') {
+            $questionAttempt->responsesummary = 'True';
+            $questionAttempt->rightanswer = 'True';
         }
 
         return $questionAttempt;
@@ -95,6 +96,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             '08' => $this->constructQuestion('08', 'somecustomquestiontypethatsnotstandardinmoodle'),
             '09' => $this->constructQuestion('09', 'someothertypewithnoanswers'),
             '10' => $this->constructQuestion('10', 'shortanswer'),
+            '11' => $this->constructQuestion('11', 'truefalse')
         ];
     }
 
@@ -174,6 +176,17 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             ];
         } else if ($question->qtype == 'someothertypewithnoanswers') {
             unset($question->answers);
+        } else if ($question->qtype == 'truefalse') {
+            $question->answers = [
+                '1'=> (object)[
+                    'id' => '1',
+                    'answer' => 'True'
+                ],
+                '2'=> (object)[
+                    'id' => '2',
+                    'answer' => 'False'
+                ]
+            ];
         }
 
         if ($index == '10') {
