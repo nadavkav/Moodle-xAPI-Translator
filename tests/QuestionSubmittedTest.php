@@ -70,12 +70,21 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             'match'
         ];
 
+        $numerictypes = [
+            'numerical',
+            'calculated',
+            'calculatedmulti',
+            'calculatedsimple'
+        ];
+
         if (in_array($qtype, $matchtypes)) {
             $questionAttempt->responsesummary = 'test question -> test answer; test question 2 -> test answer 2';
             $questionAttempt->rightanswer = 'test question -> test answer; test question 2 -> test answer 2';
         } else if (in_array($qtype, $choicetypes)) {
             $questionAttempt->responsesummary = 'test answer; test answer 2';
             $questionAttempt->rightanswer = 'test answer; test answer 2';
+        } else if (in_array($qtype, $numerictypes)) {
+            $questionAttempt->rightanswer = '5';
         } else if ($qtype == 'truefalse') {
             $questionAttempt->responsesummary = 'True';
             $questionAttempt->rightanswer = 'True';
@@ -112,12 +121,12 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                     'answer' => 'test answer',
                     'fraction' => '0.50'
                 ],
-                '1'=> (object)[
+                '2'=> (object)[
                     'id' => '2',
                     'answer' => 'test answer 2',
                     'fraction' => '0.50'
                 ],
-                '2'=> (object)[
+                '3'=> (object)[
                     'id' => '3',
                     'answer' => 'wrong test answer',
                     'fraction' => '0.00'
@@ -173,6 +182,8 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                     ]
                 ]
             ];
+            $question->answers['1']->fraction = '1.00';
+            $question->answers['2']->fraction = '1.00';
         } else if ($question->qtype == 'shortanswer') {
             $question->shortanswer = (object)[
                 'options' => (object)[
@@ -206,7 +217,6 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 ]
             ];
         }
-
         return $question;
     }
 
@@ -220,7 +230,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
     protected function assertOutput($input, $output) {
         parent::assertOutput($input, $output);
         $questionindex = substr($output['question_name'], 14, 2);
-        $this->assertAttempt($input['attempt'][$questionindex], $output);
+        $this->assertAttempt($input['attempt'][$questionindex], $output, $input['questions'][$questionindex]);
         $this->assertQuestion($input['questions'][$questionindex], $output);
 
     }
@@ -230,7 +240,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
         $this->assertQuestionAttempt($input->questions, $output);
     }
 
-    protected function assertQuestionAttempt($input, $output) {
+    protected function assertQuestionAttempt($input, $output, $question) {
         $this->assertEquals((float) $input->maxmark, $output['attempt_score_max']);
         $this->assertEquals(0, $output['attempt_score_min']);
         $this->assertEquals((float) $input->steps[1]->fraction, $output['attempt_score_scaled']);
@@ -238,7 +248,66 @@ class QuestionSubmittedTest extends AttemptStartedTest {
         $this->assertEquals($input->responsesummary, $output['attempt_response']);
         $this->assertEquals(true, $output['attempt_completed']);
         $this->assertEquals(true, $output['attempt_success']);
-        $this->assertEquals($input->rightanswer, $output['interaction_correct_responses'][0]);
+
+        $numerictypes = [
+            'numerical',
+            'calculated',
+            'calculatedmulti',
+            'calculatedsimple'
+        ];
+
+        $matchtypes = [
+            'randomsamatch',
+            'match'
+        ];
+
+        $fillintypes = [
+            'shortanswer'
+        ];
+
+        $noanswer = [
+            'someothertypewithnoanswers'
+        ];
+
+        if (in_array($question->qtype, $matchtypes)) {
+            $this->assertEquals(
+                strip_tags(
+                    $question->match->subquestions['1']->questiontext.'[.]'
+                    .$question->match->subquestions['1']->answertext.'[,]'
+                    .$question->match->subquestions['2']->questiontext.'[.]'
+                    .$question->match->subquestions['2']->answertext
+                ),
+                $output['interaction_correct_responses'][0]
+            );
+        } else if (in_array($question->qtype, $numerictypes) && ) {
+             $this->assertEquals('4[:]6', $output['interaction_correct_responses'][0]);
+        } else if (in_array($question->qtype, $fillintypes)) {
+            $this->assertEquals(
+                $question->answers['1']->answer, 
+                $output['interaction_correct_responses'][0]
+            );
+            $this->assertEquals(
+                $question->answers['2']->answer, 
+                $output['interaction_correct_responses'][1]
+            );
+        } else if ($question->qtype == 'truefalse')) {
+            $this->assertEquals(
+                $question->answers['1']->answer, 
+                $output['interaction_correct_responses'][0]
+            );
+        } else if (!in_array($question->qtype, $noanswer)) {
+            // Multichoice
+            $this->assertEquals(
+                strip_tags(
+                    $question->answers['1']->answer,.'[,]'
+                    .$question->answers['2']->answer
+                $output['interaction_correct_responses'][0]
+            );
+        } else {
+            // Default
+            $this->assertEquals($input->rightanswer, $output['interaction_correct_responses'][0]);
+        }
+
     }
 
     protected function assertQuestion($input, $output) {
