@@ -302,6 +302,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 strip_tags(
                     $question->answers['1']->answer.'[,]'
                     .$question->answers['2']->answer
+                ),
                 $output['interaction_correct_responses'][0]
             );
         } else {
@@ -330,7 +331,29 @@ class QuestionSubmittedTest extends AttemptStartedTest {
         else {
             $this->assertEquals($input->qtype, $output['interaction_type']);
         }
-        
-        $this->assertEquals($input->answers['2']->answer, $output['interaction_choices']['moodle_quiz_question_answer_2']);
+
+        $matchtypes = [
+            'randomsamatch',
+            'match'
+        ];
+
+        $multitypes = [
+            'somecustomquestiontypethatsnotstandardinmoodle',
+            'multichoice'
+        ];
+
+        if (in_array($question->qtype, $matchtypes)) {
+            $this->assertEquals(
+                strip_tags($input->match->subquestions['2']->questiontext), 
+                $output['interaction_target']['moodle_quiz_question_target_2']
+            );
+            $this->assertEquals(
+                strip_tags($input->match->subquestions['2']->answertext), 
+                $output['interaction_source']['moodle_quiz_question_source_2']
+            );
+        }  else if (in_array($question->qtype, $multitypes)) {
+            // Multichoice
+            $this->assertEquals($input->answers['2']->answer, $output['interaction_choices']['moodle_quiz_question_answer_2']);
+        }
     }
 }
