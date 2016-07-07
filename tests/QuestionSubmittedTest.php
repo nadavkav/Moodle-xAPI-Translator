@@ -113,7 +113,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
     private function constructQuestion($index, $qtype) {
         $question = (object) [
             'id' => $index,
-            'name' => 'test question {$index}',
+            'name' => 'test question '.$index,
             'questiontext' => 'test question',
             'url' => 'http://localhost/moodle/question/question.php?id='.$index,
             'answers' => [
