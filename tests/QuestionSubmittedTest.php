@@ -173,7 +173,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 ]
             ];
         } else if ($question->qtype == 'someothertypewithnoanswers') {
-            unset($question->answers)
+            unset($question->answers);
         }
 
         if ($index == '10') {
@@ -183,7 +183,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                     'id' => '1',
                     'answer' => 'test answer 2'
                 ]
-            ]
+            ];
         }
 
         return $question;
@@ -199,7 +199,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
     protected function assertOutput($input, $output) {
         parent::assertOutput($input, $output);
         $questionindex = substr($output['question_name'], 14, 2);
-        $this->assertAttempt($input['attempt'], $output);
+        $this->assertAttempt($input['attempt'][$questionindex], $output);
         $this->assertQuestion($input['questions'][$questionindex], $output);
 
     }
@@ -210,9 +210,9 @@ class QuestionSubmittedTest extends AttemptStartedTest {
     }
 
     protected function assertQuestionAttempt($input, $output) {
-        $this->assertEquals((float) $input[0]->maxmark, $output['attempt_score_max']);
-        $this->assertEquals((float) $input[0]->steps[1]->fraction, $output['attempt_score_scaled']);
-        $this->assertEquals((float) $input[0]->maxmark, $output['attempt_score_max']);
+        $this->assertEquals((float) $input->maxmark, $output['attempt_score_max']);
+        $this->assertEquals((float) $input->steps[1]->fraction, $output['attempt_score_scaled']);
+        $this->assertEquals((float) $input->maxmark, $output['attempt_score_max']);
         $this->assertEquals('moodle_quiz_question_answer_1', $output['attempt_response']);
         $this->assertEquals('moodle_quiz_question_answer_1', $output['interaction_correct_responses'][0]);
     }
