@@ -280,7 +280,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 ),
                 $output['interaction_correct_responses'][0]
             );
-        } else if (in_array($question->qtype, $numerictypes) && ) {
+        } else if (in_array($question->qtype, $numerictypes)) {
              $this->assertEquals('4[:]6', $output['interaction_correct_responses'][0]);
         } else if (in_array($question->qtype, $fillintypes)) {
             $this->assertEquals(
