@@ -109,15 +109,18 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             'answers' => [
                 '1'=> (object)[
                     'id' => '1',
-                    'answer' => 'test answer'
+                    'answer' => 'test answer',
+                    'fraction' => '0.50'
                 ],
                 '1'=> (object)[
                     'id' => '2',
-                    'answer' => 'test answer 2'
+                    'answer' => 'test answer 2',
+                    'fraction' => '0.50'
                 ],
                 '2'=> (object)[
                     'id' => '3',
-                    'answer' => 'wrong test answer'
+                    'answer' => 'wrong test answer',
+                    'fraction' => '0.00'
                 ]
             ],
             'qtype' => $qtype
@@ -129,12 +132,14 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                     '1'=> (object)[
                         'id' => '1',
                         'answer' => '5',
-                        'tolerance' => '1'
+                        'tolerance' => '1',
+                        'fraction' => '1.00'
                     ],
                     '2'=> (object)[
                         'id' => '2',
                         'answer' => '10',
-                        'tolerance' => '0'
+                        'tolerance' => '0',
+                        'fraction' => '0.00'
                     ]
                 ]
             ];
@@ -180,11 +185,13 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             $question->answers = [
                 '1'=> (object)[
                     'id' => '1',
-                    'answer' => 'True'
+                    'answer' => 'True',
+                    'fraction' => '1.00'
                 ],
                 '2'=> (object)[
                     'id' => '2',
-                    'answer' => 'False'
+                    'answer' => 'False',
+                    'fraction' => '0.00'
                 ]
             ];
         }
@@ -194,7 +201,8 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             $question->answers = [
                 '1'=> (object)[
                     'id' => '1',
-                    'answer' => 'test answer 2'
+                    'answer' => 'test answer 2',
+                    'fraction' => '1.00'
                 ]
             ];
         }
@@ -228,12 +236,16 @@ class QuestionSubmittedTest extends AttemptStartedTest {
         $this->assertEquals((float) $input->steps[1]->fraction, $output['attempt_score_scaled']);
         $this->assertEquals(((float) $input->maxmark) * ((float) $input->steps[1]->fraction), $output['attempt_score_raw']);
         $this->assertEquals($input->responsesummary, $output['attempt_response']);
+        $this->assertEquals(true, $output['attempt_completed']);
+        $this->assertEquals(true, $output['attempt_success']);
         $this->assertEquals($input->rightanswer, $output['interaction_correct_responses'][0]);
     }
 
     protected function assertQuestion($input, $output) {
-        $this->assertEquals($input[0]->name, $output['question_name']);
-        $this->assertEquals($input[0]->questiontext, $output['question_description']);
-        $this->assertEquals($input[0]->answers['2']->answer, $output['interaction_choices']['moodle_quiz_question_answer_2']);
+        $this->assertEquals($input->name, $output['question_name']);
+        $this->assertEquals($input->questiontext, $output['question_description']);
+        $this->assertEquals($input->url, $output['question_url']);
+        $this->assertEquals($input->qtype, $output['interaction_type']);
+        $this->assertEquals($input->answers['2']->answer, $output['interaction_choices']['moodle_quiz_question_answer_2']);
     }
 }
