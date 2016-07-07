@@ -234,9 +234,9 @@ class QuestionSubmittedTest extends AttemptStartedTest {
         $this->assertQuestion($input['questions'][$questionindex], $output);
     }
 
-    protected function assertAttempt($input, $output) {
+    protected function assertAttempt($input, $output, $question) {
         parent::assertAttempt($input, $output);
-        $this->assertQuestionAttempt($input->questions, $output);
+        $this->assertQuestionAttempt($input->questions, $output, $question);
     }
 
     protected function assertQuestionAttempt($input, $output, $question) {
