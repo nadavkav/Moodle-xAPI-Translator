@@ -300,10 +300,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
         } else if (!in_array($question->qtype, $noanswer)) {
             // Multichoice
             $this->assertEquals(
-                strip_tags(
-                    $question->answers['1']->answer.'[,]'
-                    .$question->answers['2']->answer
-                ),
+                'moodle_quiz_question_answer_1[,]moodle_quiz_question_answer_2',
                 $output['interaction_correct_responses'][0]
             );
         } else {
