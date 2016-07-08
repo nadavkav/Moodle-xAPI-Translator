@@ -290,7 +290,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             );
         } else if ($question->qtype == 'truefalse') {
             $this->assertEquals(
-                $question->answers['1']->answer, 
+                ($question->answers['1']->answer === 'True'), 
                 $output['interaction_correct_responses'][0]
             );
         } else if (!in_array($question->qtype, $noanswer)) {
