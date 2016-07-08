@@ -305,11 +305,11 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             );
         } else {
             // Default
-            $this->assertEquals($question->qtype.'||'.$input->rightanswer, $question->qtype.'||'.$output['interaction_correct_responses'][0]);
+            $this->assertEquals($input->rightanswer, $output['interaction_correct_responses'][0]);
         }
 
         // For the purposes of testing, the response is always correct. Test that the format is right.
-        $this->assertEquals($output['interaction_correct_responses'][0], $output['attempt_response']);
+        $this->assertEquals($question->qtype.'||'.$output['interaction_correct_responses'][0], $question->qtype.'||'.$output['attempt_response']);
 
     }
 
