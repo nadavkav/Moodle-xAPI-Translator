@@ -23,17 +23,17 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
     private function constructQuestionAttempts() {
         return [
-            '01' => $this->constructQuestionAttempt('01', 'multichoice'),
-            '02' => $this->constructQuestionAttempt('02', 'calculated'),
-            '03' => $this->constructQuestionAttempt('03', 'calculatedmulti'),
-            '04' => $this->constructQuestionAttempt('04', 'calculatedsimple'),
-            '05' => $this->constructQuestionAttempt('05', 'randomsamatch'),
-            '06' => $this->constructQuestionAttempt('06', 'match'),
-            '07' => $this->constructQuestionAttempt('07', 'shortanswer'),
-            '08' => $this->constructQuestionAttempt('08', 'somecustomquestiontypethatsnotstandardinmoodle'),
-            '09' => $this->constructQuestionAttempt('09', 'someothertypewithnoanswers'),
-            '10' => $this->constructQuestionAttempt('10', 'shortanswer'),
-            '11' => $this->constructQuestionAttempt('11', 'truefalse')
+            1 => $this->constructQuestionAttempt(1, 'multichoice'),
+            2 => $this->constructQuestionAttempt(2, 'calculated'),
+            3 => $this->constructQuestionAttempt(3, 'calculatedmulti'),
+            4 => $this->constructQuestionAttempt(4, 'calculatedsimple'),
+            5 => $this->constructQuestionAttempt(5, 'randomsamatch'),
+            6 => $this->constructQuestionAttempt(6, 'match'),
+            7 => $this->constructQuestionAttempt(7, 'shortanswer'),
+            8 => $this->constructQuestionAttempt(8, 'somecustomquestiontypethatsnotstandardinmoodle'),
+            9 => $this->constructQuestionAttempt(9, 'someothertypewithnoanswers'),
+            10 => $this->constructQuestionAttempt(10, 'shortanswer'),
+            11 => $this->constructQuestionAttempt(11, 'truefalse')
         ];
     }
 
@@ -96,17 +96,17 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
     private function constructQuestions() {
         return [
-            '01' => $this->constructQuestion('01', 'multichoice'),
-            '02' => $this->constructQuestion('02', 'calculated'),
-            '03' => $this->constructQuestion('03', 'calculatedmulti'),
-            '04' => $this->constructQuestion('04', 'calculatedsimple'),
-            '05' => $this->constructQuestion('05', 'randomsamatch'),
-            '06' => $this->constructQuestion('06', 'match'),
-            '07' => $this->constructQuestion('07', 'shortanswer'),
-            '08' => $this->constructQuestion('08', 'somecustomquestiontypethatsnotstandardinmoodle'),
-            '09' => $this->constructQuestion('09', 'someothertypewithnoanswers'),
-            '10' => $this->constructQuestion('10', 'shortanswer'),
-            '11' => $this->constructQuestion('11', 'truefalse')
+            1 => $this->constructQuestion('01', 'multichoice'),
+            2 => $this->constructQuestion('02', 'calculated'),
+            3 => $this->constructQuestion('03', 'calculatedmulti'),
+            4 => $this->constructQuestion('04', 'calculatedsimple'),
+            5 => $this->constructQuestion('05', 'randomsamatch'),
+            6 => $this->constructQuestion('06', 'match'),
+            7 => $this->constructQuestion('07', 'shortanswer'),
+            8 => $this->constructQuestion('08', 'somecustomquestiontypethatsnotstandardinmoodle'),
+            9 => $this->constructQuestion('09', 'someothertypewithnoanswers'),
+            10 => $this->constructQuestion('10', 'shortanswer'),
+            11 => $this->constructQuestion('11', 'truefalse')
         ];
     }
 
@@ -229,7 +229,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
     protected function assertOutput($input, $output) {
         parent::assertOutput($input, $output);
-        $questionindex = substr($output['question_name'], 14, 2);
+        $questionindex = intval(substr($output['question_name'], 14, 2), 10);
         $this->assertAttempt($input['attempt'], $output);
         $this->assertQuestion($input['questions'][$questionindex], $output);
         $this->assertQuestionAttempt($input['attempt']->questions[$questionindex], $output, $input['questions'][$questionindex]);
