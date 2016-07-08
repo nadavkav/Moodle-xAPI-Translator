@@ -238,7 +238,9 @@ class QuestionSubmittedTest extends AttemptStartedTest {
     }
 
     protected function assertAttempt($input, $output) {
-        parent::assertAttempt($input, $output);
+        $this->assertEquals($input->url, $output['attempt_url']);
+        $this->assertEquals($input->name, $output['attempt_name']);
+        $this->assertEquals(static::$xapi_type.$input->type, $output['attempt_type']);
     }
 
     protected function assertQuestionAttempt($input, $output, $question) {
