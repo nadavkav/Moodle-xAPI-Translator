@@ -23,7 +23,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
     private function constructQuestionAttempts() {
         return [
-            $this->constructQuestionAttempt(0, 'truefalse')
+            $this->constructQuestionAttempt(0, 'truefalse'),
             $this->constructQuestionAttempt(1, 'multichoice'),
             $this->constructQuestionAttempt(2, 'calculated'),
             $this->constructQuestionAttempt(3, 'calculatedmulti'),
@@ -33,8 +33,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             $this->constructQuestionAttempt(7, 'shortanswer'),
             $this->constructQuestionAttempt(8, 'somecustomquestiontypethatsnotstandardinmoodle'),
             $this->constructQuestionAttempt(9, 'someothertypewithnoanswers'),
-            $this->constructQuestionAttempt(10, 'shortanswer'),
-            
+            $this->constructQuestionAttempt(10, 'shortanswer')
         ];
     }
 
@@ -97,7 +96,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
     private function constructQuestions() {
         return [
-            $this->constructQuestion('00', 'truefalse')
+            $this->constructQuestion('00', 'truefalse'),
             $this->constructQuestion('01', 'multichoice'),
             $this->constructQuestion('02', 'calculated'),
             $this->constructQuestion('03', 'calculatedmulti'),
