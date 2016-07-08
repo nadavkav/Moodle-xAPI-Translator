@@ -23,17 +23,18 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
     private function constructQuestionAttempts() {
         return [
-            1 => $this->constructQuestionAttempt(1, 'multichoice'),
-            2 => $this->constructQuestionAttempt(2, 'calculated'),
-            3 => $this->constructQuestionAttempt(3, 'calculatedmulti'),
-            4 => $this->constructQuestionAttempt(4, 'calculatedsimple'),
-            5 => $this->constructQuestionAttempt(5, 'randomsamatch'),
-            6 => $this->constructQuestionAttempt(6, 'match'),
-            7 => $this->constructQuestionAttempt(7, 'shortanswer'),
-            8 => $this->constructQuestionAttempt(8, 'somecustomquestiontypethatsnotstandardinmoodle'),
-            9 => $this->constructQuestionAttempt(9, 'someothertypewithnoanswers'),
-            10 => $this->constructQuestionAttempt(10, 'shortanswer'),
-            11 => $this->constructQuestionAttempt(11, 'truefalse')
+            $this->constructQuestionAttempt(0, 'truefalse')
+            $this->constructQuestionAttempt(1, 'multichoice'),
+            $this->constructQuestionAttempt(2, 'calculated'),
+            $this->constructQuestionAttempt(3, 'calculatedmulti'),
+            $this->constructQuestionAttempt(4, 'calculatedsimple'),
+            $this->constructQuestionAttempt(5, 'randomsamatch'),
+            $this->constructQuestionAttempt(6, 'match'),
+            $this->constructQuestionAttempt(7, 'shortanswer'),
+            $this->constructQuestionAttempt(8, 'somecustomquestiontypethatsnotstandardinmoodle'),
+            $this->constructQuestionAttempt(9, 'someothertypewithnoanswers'),
+            $this->constructQuestionAttempt(10, 'shortanswer'),
+            
         ];
     }
 
@@ -96,17 +97,17 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
     private function constructQuestions() {
         return [
-            1 => $this->constructQuestion('01', 'multichoice'),
-            2 => $this->constructQuestion('02', 'calculated'),
-            3 => $this->constructQuestion('03', 'calculatedmulti'),
-            4 => $this->constructQuestion('04', 'calculatedsimple'),
-            5 => $this->constructQuestion('05', 'randomsamatch'),
-            6 => $this->constructQuestion('06', 'match'),
-            7 => $this->constructQuestion('07', 'shortanswer'),
-            8 => $this->constructQuestion('08', 'somecustomquestiontypethatsnotstandardinmoodle'),
-            9 => $this->constructQuestion('09', 'someothertypewithnoanswers'),
-            10 => $this->constructQuestion('10', 'shortanswer'),
-            11 => $this->constructQuestion('11', 'truefalse')
+            $this->constructQuestion('00', 'truefalse')
+            $this->constructQuestion('01', 'multichoice'),
+            $this->constructQuestion('02', 'calculated'),
+            $this->constructQuestion('03', 'calculatedmulti'),
+            $this->constructQuestion('04', 'calculatedsimple'),
+            $this->constructQuestion('05', 'randomsamatch'),
+            $this->constructQuestion('06', 'match'),
+            $this->constructQuestion('07', 'shortanswer'),
+            $this->constructQuestion('08', 'somecustomquestiontypethatsnotstandardinmoodle'),
+            $this->constructQuestion('09', 'someothertypewithnoanswers'),
+            $this->constructQuestion('10', 'shortanswer')
         ];
     }
 
