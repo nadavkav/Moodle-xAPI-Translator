@@ -232,7 +232,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
         $questionindex = substr($output['question_name'], 14, 2);
         $this->assertAttempt($input['attempt'], $output);
         $this->assertQuestion($input['questions'][$questionindex], $output);
-        $this->assertQuestionAttempt($input->questions, $output, $input['questions'][$questionindex]);
+        $this->assertQuestionAttempt($input['questions'], $output, $input['questions'][$questionindex]);
     }
 
     protected function assertAttempt($input, $output) {
