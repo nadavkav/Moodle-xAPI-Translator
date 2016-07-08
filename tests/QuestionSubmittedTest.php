@@ -230,10 +230,10 @@ class QuestionSubmittedTest extends AttemptStartedTest {
     protected function assertOutput($input, $output) {
         parent::assertOutput($input, $output);
         $questionindex = intval(substr($output['question_name'], 14, 2), 10);
+        $attemptQuestions = $input['attempt']->questions[$questionindex];
         $this->assertAttempt($input['attempt'], $output);
         $this->assertQuestion($input['questions'][$questionindex], $output);
-        $attempt = $input['attempt']->questions[$questionindex];
-        $this->assertQuestionAttempt($attempt, $output, $input['questions'][$questionindex]);
+        $this->assertQuestionAttempt($attemptQuestions, $output, $input['questions'][$questionindex]);
     }
 
     protected function assertAttempt($input, $output) {
