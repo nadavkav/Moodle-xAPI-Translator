@@ -340,7 +340,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             'multichoice'
         ];
 
-        if (in_array($question->qtype, $matchtypes)) {
+        if (in_array($input->qtype, $matchtypes)) {
             $this->assertEquals(
                 strip_tags($input->match->subquestions['2']->questiontext), 
                 $output['interaction_target']['moodle_quiz_question_target_2']
@@ -350,14 +350,14 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 $output['interaction_source']['moodle_quiz_question_source_2']
             );
             $this->assertEquals('match', $output['interaction_type']);
-        } else if (in_array($question->qtype, $multitypes)) {
+        } else if (in_array($input->qtype, $multitypes)) {
             $this->assertEquals($input->answers['2']->answer, $output['interaction_choices']['moodle_quiz_question_answer_2']);
             $this->assertEquals('choice', $output['interaction_type']);
-        } else if ($question->qtype == 'truefalse') {
+        } else if ($input->qtype == 'truefalse') {
             $this->assertEquals('true-false', $output['interaction_type']);
-        } else if (in_array($question->qtype, $numerictypes)) {
+        } else if (in_array($input->qtype, $numerictypes)) {
             $this->assertEquals('numeric', $output['interaction_type']);
-        } else if (in_array($question->qtype, $fillintypes)) {
+        } else if (in_array($input->qtype, $fillintypes)) {
             $this->assertEquals('fill-in', $output['interaction_type']);
         } else {
             $this->assertEquals('other', $output['interaction_type']);
