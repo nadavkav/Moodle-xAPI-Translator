@@ -63,7 +63,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
         $choicetypes = [
             'multichoice',
-            'truefalse'
+            'somecustomquestiontypethatsnotstandardinmoodle'
         ];
 
         $matchtypes = [
@@ -319,20 +319,20 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             $this->assertEquals($input->url, $output['question_url']);
         }
 
-        $otherQTypes = [
-            'somecustomquestiontypethatsnotstandardinmoodle',
-            'someothertypewithnoanswers'
+        $numerictypes = [
+            'numerical',
+            'calculated',
+            'calculatedmulti',
+            'calculatedsimple'
         ];
-        if (in_array($input->qtype, $otherQTypes)) {
-            $this->assertEquals('other', $output['interaction_type']);
-        }
-        else {
-            $this->assertEquals($input->qtype, $output['interaction_type']);
-        }
 
         $matchtypes = [
             'randomsamatch',
             'match'
+        ];
+
+        $fillintypes = [
+            'shortanswer'
         ];
 
         $multitypes = [
@@ -349,9 +349,18 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 strip_tags($input->match->subquestions['2']->answertext), 
                 $output['interaction_source']['moodle_quiz_question_source_2']
             );
-        }  else if (in_array($question->qtype, $multitypes)) {
-            // Multichoice
+            $this->assertEquals('match', $output['interaction_type']);
+        } else if (in_array($question->qtype, $multitypes)) {
             $this->assertEquals($input->answers['2']->answer, $output['interaction_choices']['moodle_quiz_question_answer_2']);
+            $this->assertEquals('choice', $output['interaction_type']);
+        } else if ($question->qtype == 'truefalse') {
+            $this->assertEquals('true-false', $output['interaction_type']);
+        } else if (in_array($question->qtype, $numerictypes)) {
+            $this->assertEquals('numeric', $output['interaction_type']);
+        } else if (in_array($question->qtype, $fillintypes)) {
+            $this->assertEquals('fill-in', $output['interaction_type']);
+        } else {
+            $this->assertEquals('other', $output['interaction_type']);
         }
     }
 }
