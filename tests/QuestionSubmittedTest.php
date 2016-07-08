@@ -244,7 +244,6 @@ class QuestionSubmittedTest extends AttemptStartedTest {
         $this->assertEquals(0, $output['attempt_score_min']);
         $this->assertEquals((float) $input->steps[1]->fraction, $output['attempt_score_scaled']);
         $this->assertEquals(((float) $input->maxmark) * ((float) $input->steps[1]->fraction), $output['attempt_score_raw']);
-        $this->assertEquals($input->responsesummary, $output['attempt_response']);
         $this->assertEquals(true, $output['attempt_completed']);
         $this->assertEquals(true, $output['attempt_success']);
 
@@ -307,6 +306,9 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             // Default
             $this->assertEquals($input->rightanswer, $output['interaction_correct_responses'][0]);
         }
+
+        // For the purposes of testing, the response is always correct. Test that the format is right.
+        $this->assertEquals($output['interaction_correct_responses'][0], $output['attempt_response']);
 
     }
 
