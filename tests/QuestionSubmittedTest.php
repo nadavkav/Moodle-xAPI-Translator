@@ -314,12 +314,15 @@ class QuestionSubmittedTest extends AttemptStartedTest {
     }
 
     protected function assertQuestion($input, $output) {
-        $this->assertEquals($input->name, $output['question_name']);
-        $this->assertEquals($input->questiontext, $output['question_description']);
+        
         if (strpos($input->qtype, 'calculated') === 0) {
             $this->assertEquals($input->url.'&variant=1', $output['question_url']);
+            $this->assertEquals($input->name, $output['question_name'] . 'variant 1');
+            $this->assertEquals($input->questiontext, $output['question_description'] . 'variant 1');
         } else {
             $this->assertEquals($input->url, $output['question_url']);
+            $this->assertEquals($input->name, $output['question_name']);
+            $this->assertEquals($input->questiontext, $output['question_description']);
         }
 
         $numerictypes = [
