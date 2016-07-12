@@ -302,7 +302,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
         if (in_array($question->qtype, $matchtypes)) {
             $this->assertEquals(
-                'test question[.]test answer[,]test question 2[.]test answer 4'
+                'test question[.]test answer[,]test question 2[.]test answer 4',
                 $output['interaction_correct_responses'][0]
             );
         } else if (in_array($question->qtype, $numerictypes)) {
