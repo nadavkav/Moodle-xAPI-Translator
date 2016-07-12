@@ -312,10 +312,6 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 '{case_matters=false}'.$question->answers['1']->answer, 
                 $output['interaction_correct_responses'][0]
             );
-            $this->assertEquals(
-                '{case_matters=false}'.$question->answers['2']->answer, 
-                $output['interaction_correct_responses'][1]
-            );
         } else if ($question->qtype == 'truefalse') {
             $this->assertEquals(
                 strtolower($question->answers['1']->answer), 
