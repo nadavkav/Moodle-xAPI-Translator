@@ -179,7 +179,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                     '2'=> (object)[
                         'id' => '2',
                         'questiontext' => '<p>test question 2</p>',
-                        'answertext' => '<p>test answer 2</p>'
+                        'answertext' => '<p>test answer 3</p>'
                     ]
                 ]
             ];
@@ -239,8 +239,8 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             $question->questiontext = 'test question 2';
             $question->answers = [
                 '1'=> (object)[
-                    'id' => '1',
-                    'answer' => 'test answer 2',
+                    'id' => '3',
+                    'answer' => 'test answer 3',
                     'fraction' => '1.00'
                 ]
             ];
@@ -391,7 +391,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 $output['interaction_target']['moodle_quiz_question_target_2']
             );
             $this->assertEquals(
-                'test answer 2',
+                'test answer 3',
                 $output['interaction_source']['moodle_quiz_question_source_2']
             );
             $this->assertEquals('match', $output['interaction_type']);
