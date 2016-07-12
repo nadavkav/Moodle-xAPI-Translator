@@ -317,8 +317,8 @@ class QuestionSubmittedTest extends AttemptStartedTest {
         
         if (strpos($input->qtype, 'calculated') === 0) {
             $this->assertEquals($input->url.'&variant=1', $output['question_url']);
-            $this->assertEquals($input->name . 'variant 1', $output['question_name']);
-            $this->assertEquals($input->questiontext . 'variant 1', $output['question_description']);
+            $this->assertEquals($input->name . ' - variant 1', $output['question_name']);
+            $this->assertEquals($input->questiontext . ' - variant 1', $output['question_description']);
         } else {
             $this->assertEquals($input->url, $output['question_url']);
             $this->assertEquals($input->name, $output['question_name']);
