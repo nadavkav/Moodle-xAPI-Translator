@@ -33,7 +33,8 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             $this->constructQuestionAttempt(7, 'shortanswer'),
             $this->constructQuestionAttempt(8, 'somecustomquestiontypethatsnotstandardinmoodle'),
             $this->constructQuestionAttempt(9, 'someothertypewithnoanswers'),
-            $this->constructQuestionAttempt(10, 'shortanswer')
+            $this->constructQuestionAttempt(10, 'shortanswer'),
+            $this->constructQuestionAttempt(11, 'numerical')
         ];
     }
 
@@ -106,7 +107,8 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             $this->constructQuestion('07', 'shortanswer'),
             $this->constructQuestion('08', 'somecustomquestiontypethatsnotstandardinmoodle'),
             $this->constructQuestion('09', 'someothertypewithnoanswers'),
-            $this->constructQuestion('10', 'shortanswer')
+            $this->constructQuestion('10', 'shortanswer'),
+            $this->constructQuestion('11', 'numerical')
         ];
     }
 
@@ -141,16 +143,28 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 'answers' => [
                     '1'=> (object)[
                         'id' => '1',
-                        'answer' => '5',
-                        'tolerance' => '1',
-                        'fraction' => '1.00'
+                        'question' => $index
+                        'answer' => '1',
+                        'tolerance' => '1'
                     ],
                     '2'=> (object)[
                         'id' => '2',
-                        'answer' => '10',
-                        'tolerance' => '0',
-                        'fraction' => '0.00'
+                        'question' => $index
+                        'answer' => '2',
+                        'tolerance' => '1'
                     ]
+                ]
+            ];
+            $question->answers = [
+                '1'=> (object)[
+                    'id' => '1',
+                    'answer' => '5',
+                    'fraction' => '1.00'
+                ],
+                '2'=> (object)[
+                    'id' => '2',
+                    'answer' => '10',
+                    'fraction' => '0.00'
                 ]
             ];
         } else if ($question->qtype == 'match') {
@@ -173,18 +187,30 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 'answers' => [
                     '1'=> (object)[
                         'id' => '1',
-                        'answer' => '5',
+                        'question' => $index
+                        'answer' => '1',
                         'tolerance' => '1'
                     ],
                     '2'=> (object)[
                         'id' => '2',
-                        'answer' => '10',
-                        'tolerance' => '0'
+                        'question' => $index
+                        'answer' => '2',
+                        'tolerance' => '1'
                     ]
                 ]
             ];
-            $question->answers['1']->fraction = '1.00';
-            $question->answers['2']->fraction = '1.00';
+            $question->answers = [
+                '1'=> (object)[
+                    'id' => '1',
+                    'answer' => '5',
+                    'fraction' => '1.00'
+                ],
+                '2'=> (object)[
+                    'id' => '2',
+                    'answer' => '10',
+                    'fraction' => '0.00'
+                ]
+            ];
         } else if ($question->qtype == 'shortanswer') {
             $question->shortanswer = (object)[
                 'options' => (object)[
