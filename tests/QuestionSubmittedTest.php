@@ -302,12 +302,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
         if (in_array($question->qtype, $matchtypes)) {
             $this->assertEquals(
-                strip_tags(
-                    $question->match->subquestions['1']->questiontext.'[.]'
-                    .$question->match->subquestions['1']->answertext.'[,]'
-                    .$question->match->subquestions['4']->questiontext.'[.]'
-                    .$question->match->subquestions['4']->answertext
-                ),
+                'test question[.]test answer[,]test question 2[.]test answer 4'
                 $output['interaction_correct_responses'][0]
             );
         } else if (in_array($question->qtype, $numerictypes)) {
