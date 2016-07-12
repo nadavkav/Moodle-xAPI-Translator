@@ -80,7 +80,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
         ];
 
         if (in_array($qtype, $matchtypes)) {
-            $questionAttempt->responsesummary = 'test question -> test answer; test question 2 -> test answer 2';
+            $questionAttempt->responsesummary = 'test question -> test answer; test question 2 -> test answer 4';
             $questionAttempt->rightanswer = 'test question -> test answer; test question 2 -> test answer 4';
         } else if (in_array($qtype, $choicetypes)) {
             $questionAttempt->responsesummary = 'test answer; test answer 2';
