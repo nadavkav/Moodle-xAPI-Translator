@@ -117,7 +117,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
         $question = (object) [
             'id' => $index,
             'name' => 'test question '.$index,
-            'questiontext' => 'test question 1',
+            'questiontext' => 'test question',
             'url' => 'http://localhost/moodle/question/question.php?id='.$index,
             'answers' => [
                 '1'=> (object)[
@@ -381,11 +381,11 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
         if (in_array($input->qtype, $matchtypes)) {
             $this->assertEquals(
-                'test question 1', 
+                'test question', 
                 $output['interaction_target']['moodle_quiz_question_target_1']
             );
             $this->assertEquals(
-                'test answer 1',
+                'test answer',
                 $output['interaction_source']['moodle_quiz_question_source_1']
             );
             $this->assertEquals(
