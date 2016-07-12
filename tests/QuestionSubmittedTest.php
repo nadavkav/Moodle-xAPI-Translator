@@ -308,7 +308,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 $output['interaction_correct_responses'][0]
             );
         } else if (in_array($question->qtype, $numerictypes)) {
-             $this->assertEquals($question->qtype.'||'.'4[:]6', $question->qtype.'||'.$output['interaction_correct_responses'][0]);
+             $this->assertEquals('4[:]6', $output['interaction_correct_responses'][0]);
         } else if (in_array($question->qtype, $fillintypes)) {
             $this->assertEquals(
                 $question->answers['1']->answer, 
@@ -335,7 +335,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
         }
 
         // For the purposes of testing, the response is always correct. Test that the format is right.
-        $this->assertEquals($output['interaction_correct_responses'][0], $output['attempt_response']);
+        $this->assertEquals($question->qtype.'||'.$output['interaction_correct_responses'][0], $question->qtype.'||'.$output['attempt_response']);
 
     }
 
