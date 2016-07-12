@@ -143,13 +143,13 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 'answers' => [
                     '1'=> (object)[
                         'id' => '1',
-                        'question' => $index
+                        'question' => $index,
                         'answer' => '1',
                         'tolerance' => '1'
                     ],
                     '2'=> (object)[
                         'id' => '2',
-                        'question' => $index
+                        'question' => $index,
                         'answer' => '2',
                         'tolerance' => '1'
                     ]
@@ -187,13 +187,13 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 'answers' => [
                     '1'=> (object)[
                         'id' => '1',
-                        'question' => $index
+                        'question' => $index,
                         'answer' => '1',
                         'tolerance' => '1'
                     ],
                     '2'=> (object)[
                         'id' => '2',
-                        'question' => $index
+                        'question' => $index,
                         'answer' => '2',
                         'tolerance' => '1'
                     ]
