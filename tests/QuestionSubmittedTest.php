@@ -86,6 +86,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             $questionAttempt->responsesummary = 'test answer; test answer 2';
             $questionAttempt->rightanswer = 'test answer; test answer 2';
         } else if (in_array($qtype, $numerictypes)) {
+            $questionAttempt->responsesummary = '5';
             $questionAttempt->rightanswer = '5';
         } else if ($qtype == 'truefalse') {
             $questionAttempt->responsesummary = 'True';
@@ -335,7 +336,11 @@ class QuestionSubmittedTest extends AttemptStartedTest {
         }
 
         // For the purposes of testing, the response is always correct. Test that the format is right.
-        $this->assertEquals($question->qtype.'||'.$output['interaction_correct_responses'][0], $question->qtype.'||'.$output['attempt_response']);
+        if (in_array($question->qtype, $numerictypes)) {
+            $this->assertEquals($input->responsesummary, $output['attempt_response']);
+        } else {
+            $this->assertEquals($output['interaction_correct_responses'][0], $output['attempt_response']);
+        }
 
     }
 
