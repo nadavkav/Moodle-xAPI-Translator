@@ -81,7 +81,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
         if (in_array($qtype, $matchtypes)) {
             $questionAttempt->responsesummary = 'test question -> test answer; test question 2 -> test answer 2';
-            $questionAttempt->rightanswer = 'test question -> test answer; test question 2 -> test answer 2';
+            $questionAttempt->rightanswer = 'test question -> test answer; test question 2 -> test answer 4';
         } else if (in_array($qtype, $choicetypes)) {
             $questionAttempt->responsesummary = 'test answer; test answer 2';
             $questionAttempt->rightanswer = 'test answer; test answer 2';
@@ -177,9 +177,9 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                         'answertext' => '<p>test answer</p>'
                     ],
                     '2'=> (object)[
-                        'id' => '2',
+                        'id' => '4',
                         'questiontext' => '<p>test question 2</p>',
-                        'answertext' => '<p>test answer 3</p>'
+                        'answertext' => '<p>test answer 4</p>'
                     ]
                 ]
             ];
@@ -218,6 +218,8 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                     'usecase' => '0'
                 ]
             ];
+            $question->answers['1']->fraction = '1.00';
+            $question->answers['2']->fraction = '0.00';
         } else if ($question->qtype == 'someothertypewithnoanswers') {
             $question->answers = [];
         } else if ($question->qtype == 'truefalse') {
@@ -239,8 +241,8 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             $question->questiontext = 'test question 2';
             $question->answers = [
                 '1'=> (object)[
-                    'id' => '3',
-                    'answer' => 'test answer 3',
+                    'id' => '4',
+                    'answer' => 'test answer 4',
                     'fraction' => '1.00'
                 ]
             ];
@@ -303,8 +305,8 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 strip_tags(
                     $question->match->subquestions['1']->questiontext.'[.]'
                     .$question->match->subquestions['1']->answertext.'[,]'
-                    .$question->match->subquestions['2']->questiontext.'[.]'
-                    .$question->match->subquestions['2']->answertext
+                    .$question->match->subquestions['4']->questiontext.'[.]'
+                    .$question->match->subquestions['4']->answertext
                 ),
                 $output['interaction_correct_responses'][0]
             );
@@ -388,11 +390,11 @@ class QuestionSubmittedTest extends AttemptStartedTest {
             );
             $this->assertEquals(
                 'test question 2', 
-                $output['interaction_target']['moodle_quiz_question_target_2']
+                $output['interaction_target']['moodle_quiz_question_target_4']
             );
             $this->assertEquals(
-                'test answer 3',
-                $output['interaction_source']['moodle_quiz_question_source_2']
+                'test answer 4',
+                $output['interaction_source']['moodle_quiz_question_source_4']
             );
             $this->assertEquals('match', $output['interaction_type']);
         } else if (in_array($input->qtype, $multitypes)) {
