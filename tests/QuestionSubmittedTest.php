@@ -302,7 +302,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
 
         if (in_array($question->qtype, $matchtypes)) {
             $this->assertEquals(
-                'test question[.]test answer[,]test question 2[.]test answer 4',
+                'moodle_quiz_question_source_1[.]moodle_quiz_question_target_1[,]moodle_quiz_question_source_4[.]moodle_quiz_question_target_4',
                 $output['interaction_correct_responses'][0]
             );
         } else if (in_array($question->qtype, $numerictypes)) {
