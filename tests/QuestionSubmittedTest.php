@@ -396,7 +396,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
                 'test answer 4',
                 $output['interaction_source']['moodle_quiz_question_source_4']
             );
-            $this->assertEquals('match', $output['interaction_type']);
+            $this->assertEquals('matching', $output['interaction_type']);
         } else if (in_array($input->qtype, $multitypes)) {
             $this->assertEquals($input->answers['2']->answer, $output['interaction_choices']['moodle_quiz_question_answer_2']);
             $this->assertEquals('choice', $output['interaction_type']);
