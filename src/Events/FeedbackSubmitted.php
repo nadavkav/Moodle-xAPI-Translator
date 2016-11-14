@@ -14,7 +14,7 @@ class FeedbackSubmitted extends ModuleViewed {
         return [array_merge(parent::read($opts)[0], [
             'recipe' => 'attempt_completed',
             'attempt_url' => $opts['attempt']->url,
-            'attempt_type' => static::$xapi_type.$opts['attempt']->type,
+            'attempt_type' => static::$xapiType.$opts['attempt']->type,
             'attempt_ext' => $opts['attempt'],
             'attempt_ext_key' => 'http://lrs.learninglocker.net/define/extensions/moodle_feedback_attempt',
             'attempt_name' => $opts['attempt']->name,
