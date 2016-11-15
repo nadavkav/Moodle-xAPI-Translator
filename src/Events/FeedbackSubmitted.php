@@ -25,7 +25,7 @@ class FeedbackSubmitted extends ModuleViewed {
             'attempt_success' => null,
             'attempt_completed' => true,
             'attempt_duration' => null,
-            'time' => date('c', empty($opts['attempt']->timemodified) ? time() : $opts['attempt']->timemodified)
+            'time' => date('c', $opts['attempt']->timemodified)
         ])];
     }
 
