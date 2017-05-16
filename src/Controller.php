@@ -27,7 +27,6 @@ class Controller extends PhpObj {
         '\mod_glossary\event\course_module_viewed' => 'ModuleViewed',
         '\mod_imscp\event\course_module_viewed' => 'ModuleViewed',
         '\mod_survey\event\course_module_viewed' => 'ModuleViewed',
-        '\mod_url\event\course_module_viewed' => 'ModuleViewed',
         '\mod_facetoface\event\course_module_viewed' => 'ModuleViewed',
         '\mod_quiz\event\attempt_abandoned' => 'AttemptAbandoned',
         '\mod_quiz\event\attempt_preview_started' => 'AttemptStarted',
@@ -41,6 +40,9 @@ class Controller extends PhpObj {
         '\core\event\user_enrolment_created' => 'EnrolmentCreated',
         '\mod_scorm\event\sco_launched' => 'ScormLaunched',
         '\mod_feedback\event\response_submitted' => ['FeedbackSubmitted','FeedbackQuestionSubmitted'],
+        '\mod_facetoface\event\signup_success' => 'FacetofaceEnrol',
+        '\mod_facetoface\event\cancel_booking' => 'FacetofaceUnenrol',
+        '\mod_facetoface\event\take_attendance' => 'FacetofaceAttend'
     ];
 
     /**
