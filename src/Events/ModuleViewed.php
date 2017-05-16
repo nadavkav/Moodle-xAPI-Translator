@@ -12,7 +12,7 @@ class ModuleViewed extends CourseViewed {
             'recipe' => 'module_viewed',
             'module_url' => $opts['module']->url,
             'module_name' => $opts['module']->name,
-            'module_description' => isset($opts['module']->intro ? $opts['module']->intro : 'A module',
+            'module_description' => isset($opts['module']->intro) ? $opts['module']->intro : 'A module',
             'module_type' => static::$xapiType.$opts['module']->type,
             'module_ext' => $opts['module'],
             'module_ext_key' => 'http://lrs.learninglocker.net/define/extensions/moodle_module'
