@@ -3,7 +3,7 @@ use \MXTranslator\Repository as Repository;
 use \stdClass as PhpObj;
 
 class Event extends PhpObj {
-    protected static $xapi_type = 'http://lrs.learninglocker.net/define/type/moodle/';
+    protected static $xapiType = 'http://lrs.learninglocker.net/define/type/moodle/';
 
     /**
      * Reads data for an event.
