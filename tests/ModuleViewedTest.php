@@ -37,7 +37,7 @@ class ModuleViewedTest extends CourseViewedTest {
         $this->assertEquals($input->url, $output[$type.'_url']);
         $this->assertEquals($input->name, $output[$type.'_name']);
         $this->assertEquals($input->intro, $output[$type.'_description']);
-        $this->assertEquals(static::$xapi_type.$input->type, $output[$type.'_type']);
+        $this->assertEquals(static::$xapiType.$input->type, $output[$type.'_type']);
         $this->assertEquals($input, $output[$type.'_ext']);
         $this->assertEquals($ext_key, $output[$type.'_ext_key']);
     }
