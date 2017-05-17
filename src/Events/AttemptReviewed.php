@@ -8,8 +8,13 @@ class AttemptReviewed extends AttemptStarted {
      * @override AttemtStarted
      */
     public function read(array $opts) {
-        $seconds = $opts['attempt']->timefinish - $opts['attempt']->timestart;
-        $duration = "PT".(string) $seconds."S";
+        if(isset($opts['attempt']->timefinish)){
+            $seconds = $opts['attempt']->timefinish - $opts['attempt']->timestart;
+            $duration = "PT".(string) $seconds."S";
+        }
+        else{
+            $duration = "NA";
+        }
         $scoreRaw = (float) ($opts['attempt']->sumgrades ?: 0);
         $scoreMin = (float) ($opts['grade_items']->grademin ?: 0);
         $scoreMax = (float) ($opts['grade_items']->grademax ?: 0);
