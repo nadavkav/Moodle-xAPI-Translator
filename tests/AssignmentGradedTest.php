@@ -5,11 +5,11 @@ class AssignmentGradedTest extends ModuleViewedTest {
     protected static $recipe_name = 'assignment_graded';
 
     /**
-     * Sets up the tests.
-     * @override TestCase
-     */
+ * Sets up the tests.
+ * @override TestCase
+ */
     public function setup() {
-        $this->event = new Event($this->repo);
+        $this->event = new Event();
     }
 
     protected function constructInput() {

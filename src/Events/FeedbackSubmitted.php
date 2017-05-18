@@ -64,7 +64,7 @@ class FeedbackSubmitted extends ModuleViewed {
                 'response' => null
             ];
 
-            $parsedQuestion->response = $currentResponse->value;
+            $parsedQuestion->response = $currentResponse->id;
 
             // Add scores and response
             foreach ($parsedQuestion->options as $optionIndex => $option) {
@@ -73,7 +73,7 @@ class FeedbackSubmitted extends ModuleViewed {
                 }
 
                 // Find the option the learner selected
-                if ($optionIndex == $currentResponse->value){
+                if ($optionIndex == $currentResponse->id){
                     if (isset($option->value)) {
                         $parsedQuestion->score->raw = $option->value;
                     }
