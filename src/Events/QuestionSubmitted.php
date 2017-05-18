@@ -50,7 +50,7 @@ class QuestionSubmitted extends AttemptStarted {
             'attempt_score_scaled' => 0, //default
             'attempt_score_raw' => 0, //default
             'attempt_score_min' => 0, //always 0
-            'attempt_score_max' => $questionAttempt->maxmark,
+            'attempt_score_max' => isset($questionAttempt->maxmark) ? $questionAttempt->maxmark : 100,
             'attempt_response' => $questionAttempt->responsesummary, //default
         ];
 
@@ -82,6 +82,9 @@ class QuestionSubmitted extends AttemptStarted {
      * @return [String => Mixed]
      */
     public function resultFromState($translatorevent, $questionAttempt, $submittedState) {
+
+        $maxMark = isset($questionAttempt->maxmark) ? $questionAttempt->maxmark : 100;
+
         switch ($submittedState->state) {
             case "todo":
                 $translatorevent['attempt_completed'] = false;
@@ -99,19 +102,19 @@ class QuestionSubmitted extends AttemptStarted {
                 $translatorevent['attempt_completed'] = true;
                 $translatorevent['attempt_success'] = false;
                 $translatorevent['attempt_score_scaled'] = $submittedState->fraction;
-                $translatorevent['attempt_score_raw'] = $submittedState->fraction * $questionAttempt->maxmark;
+                $translatorevent['attempt_score_raw'] = $submittedState->fraction * $maxMark;
                 break;
             case "gradedpartial":
                 $translatorevent['attempt_completed'] = true;
                 $translatorevent['attempt_success'] = false;
                 $translatorevent['attempt_score_scaled'] = $submittedState->fraction;
-                $translatorevent['attempt_score_raw'] = $submittedState->fraction * $questionAttempt->maxmark;
+                $translatorevent['attempt_score_raw'] = $submittedState->fraction * $maxMark;
                 break;
             case "gradedright":
                 $translatorevent['attempt_completed'] = true;
                 $translatorevent['attempt_success'] = true;
                 $translatorevent['attempt_score_scaled'] = $submittedState->fraction;
-                $translatorevent['attempt_score_raw'] = $submittedState->fraction * $questionAttempt->maxmark;
+                $translatorevent['attempt_score_raw'] = $submittedState->fraction * $maxMark;
                 break;
             default:
                 $translatorevent['attempt_completed'] = null;
