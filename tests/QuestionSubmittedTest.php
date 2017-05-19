@@ -9,7 +9,7 @@ class QuestionSubmittedTest extends AttemptStartedTest {
      * @override TestCase
      */
     public function setup() {
-        $this->event = new Event($this->repo);
+        $this->event = new Event();
     }
 
     protected function constructInput() {

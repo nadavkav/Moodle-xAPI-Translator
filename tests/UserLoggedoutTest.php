@@ -9,6 +9,6 @@ class UserLoggedoutTest extends UserEventTest {
      * @override TestCase
      */
     public function setup() {
-        $this->event = new Event($this->repo);
+        $this->event = new Event();
     }
 }

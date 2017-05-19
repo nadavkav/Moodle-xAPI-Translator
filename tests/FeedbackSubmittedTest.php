@@ -9,7 +9,7 @@ class FeedbackSubmittedTest extends ModuleViewedTest {
      * @override TestCase
      */
     public function setup() {
-        $this->event = new Event($this->repo);
+        $this->event = new Event();
     }
 
     protected function constructInput() {
@@ -71,7 +71,7 @@ class FeedbackSubmittedTest extends ModuleViewedTest {
         $ext_key = 'http://lrs.learninglocker.net/define/extensions/moodle_feedback_attempt';
         $this->assertEquals($input->url, $output['attempt_url']);
         $this->assertEquals($input->name, $output['attempt_name']);
-        $this->assertEquals(static::$xapi_type.$input->type, $output['attempt_type']);
+        $this->assertEquals(static::$xapiType.$input->type, $output['attempt_type']);
         $this->assertEquals($input, $output['attempt_ext']);
         $this->assertEquals($ext_key, $output['attempt_ext_key']);
     }

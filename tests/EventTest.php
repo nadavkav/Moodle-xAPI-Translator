@@ -3,7 +3,7 @@ use \PHPUnit_Framework_TestCase as PhpUnitTestCase;
 use \MXTranslator\Events\Event as Event;
 
 abstract class EventTest extends PhpUnitTestCase {
-    protected static $xapi_type = 'http://lrs.learninglocker.net/define/type/moodle/';
+    protected static $xapiType = 'http://lrs.learninglocker.net/define/type/moodle/';
     protected static $recipe_name;
 
     /**
@@ -128,7 +128,7 @@ abstract class EventTest extends PhpUnitTestCase {
         $this->assertEquals($input->url, $output[$type.'_url']);
         $this->assertEquals($input->fullname, $output[$type.'_name']);
         $this->assertEquals(strip_tags($input->summary), $output[$type.'_description']);
-        $this->assertEquals(static::$xapi_type.$input->type, $output[$type.'_type']);
+        $this->assertEquals(static::$xapiType.$input->type, $output[$type.'_type']);
         $this->assertEquals($input, $output[$type.'_ext']);
         $this->assertEquals($ext_key, $output[$type.'_ext_key']);
     }

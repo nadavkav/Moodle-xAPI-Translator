@@ -8,9 +8,15 @@ class AttemptReviewed extends AttemptStarted {
      * @override AttemtStarted
      */
     public function read(array $opts) {
-        $seconds = $opts['attempt']->timefinish - $opts['attempt']->timestart;
-        $duration = "PT".(string) $seconds."S";
-        $scoreRaw = (float) ($opts['attempt']->sumgrades ?: 0);
+        if(isset($opts['attempt']->timefinish)){
+            $seconds = $opts['attempt']->timefinish - $opts['attempt']->timestart;
+            $duration = "PT".(string) $seconds."S";
+        }
+        else{
+            $duration = "PT0S";
+        }
+
+        $scoreRaw = isset($opts['attempt']->sumgrades) ? $opts['attempt']->sumgrades : 0;
         $scoreMin = (float) ($opts['grade_items']->grademin ?: 0);
         $scoreMax = (float) ($opts['grade_items']->grademax ?: 0);
         $scorePass = (float) ($opts['grade_items']->gradepass ?: null);
@@ -23,12 +29,19 @@ class AttemptReviewed extends AttemptStarted {
             $success = true;
         }
         //Calculate scaled score as the distance from zero towards the max (or min for negative scores).
-        $scoreScaled;
         if ($scoreRaw >= 0) {
             $scoreScaled = $scoreRaw / $scoreMax;
         }
         else {
             $scoreScaled = $scoreRaw / $scoreMin;
+        }
+
+        //Determine if the attempt was marked finished
+        if(isset($opts['attempt']->state)){
+            $completedState = $opts['attempt']->state === 'finished';
+        }
+        else{
+            $completedState = false;
         }
         return [array_merge(parent::read($opts)[0], [
             'recipe' => 'attempt_completed',
@@ -37,7 +50,7 @@ class AttemptReviewed extends AttemptStarted {
             'attempt_score_max' => $scoreMax,
             'attempt_score_scaled' => $scoreScaled,
             'attempt_success' => $success,
-            'attempt_completed' => $opts['attempt']->state === 'finished',
+            'attempt_completed' => $completedState,
             'attempt_duration' => $duration,
         ])];
     }
