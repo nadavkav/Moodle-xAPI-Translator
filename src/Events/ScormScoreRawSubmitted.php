@@ -1,6 +1,6 @@
 <?php namespace MXTranslator\Events;
 
-class ScormScorerawSubmitted extends ModuleViewed {
+class ScormScoreRawSubmitted extends ModuleViewed {
     /**
      * Reads data for an event.
      * @param [String => Mixed] $opts

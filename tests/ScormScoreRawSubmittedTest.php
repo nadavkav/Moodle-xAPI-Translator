@@ -1,7 +1,7 @@
 <?php namespace MXTranslator\Tests;
-use \MXTranslator\Events\ScormScorerawSubmitted as Event;
+use \MXTranslator\Events\ScormScoreRawSubmitted as Event;
 
-class ScormScorerawSubmittedTest extends ModuleViewedTest {
+class ScormScoreRawSubmittedTest extends ModuleViewedTest {
     protected static $recipe_name = 'scorm_scoreraw_submitted';
 
     /**
@@ -9,7 +9,7 @@ class ScormScorerawSubmittedTest extends ModuleViewedTest {
      * @override TestCase
      */
     public function setup() {
-        $this->event = new Event($this->repo);
+        $this->event = new Event();
     }
 
     protected function constructInput() {

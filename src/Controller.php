@@ -43,7 +43,7 @@ class Controller extends PhpObj {
         '\mod_facetoface\event\signup_success' => 'FacetofaceEnrol',
         '\mod_facetoface\event\cancel_booking' => 'FacetofaceUnenrol',
         '\mod_facetoface\event\take_attendance' => 'FacetofaceAttend',
-        '\mod_scorm\event\scoreraw_submitted' => 'ScormScorerawSubmitted',
+        '\mod_scorm\event\scoreraw_submitted' => 'ScormScoreRawSubmitted',
         '\mod_scorm\event\status_submitted' => 'ScormStatusSubmitted'
     ];
 
