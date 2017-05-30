@@ -1,6 +1,6 @@
 <?php namespace MXTranslator\Events;
 
-class ScormScoreRawSubmitted extends ModuleViewed {
+class ScormScoreRawSubmitted extends ScormEvent {
     /**
      * Reads data for an event.
      * @param [String => Mixed] $opts
@@ -17,19 +17,10 @@ class ScormScoreRawSubmitted extends ModuleViewed {
 
         return [array_merge(parent::read($opts)[0], [
             'recipe' => 'scorm_scoreraw_submitted',
-            'scorm_url' => $opts['module']->url,
-            'scorm_name' => $opts['module']->name,
-            'scorm_scoes_id' => $opts['scorm_scoes']->id,
-            'scorm_scoes_type' => 'http://adlnet.gov/expapi/activities/lesson',
-            'scorm_scoes_url' => $opts['module']->url,
-            'scorm_scoes_name' => $opts['scorm_scoes']->title,
-            'scorm_scoes_description' => $opts['scorm_scoes']->title,
-            'scorm_attempt' => $opts['cmi_data']['attemptid'],
             'scorm_score_raw' => $scoreRaw,
             'scorm_score_min' => $scoreMin,
             'scorm_score_max' => $scoreMax,
             'scorm_score_scaled' => $scoreScaled,
-            'scorm_status' => $opts['scorm_scoes_track']['status'],
         ])];
     }
 }
