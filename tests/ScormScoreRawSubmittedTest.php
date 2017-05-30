@@ -1,7 +1,7 @@
 <?php namespace MXTranslator\Tests;
 use \MXTranslator\Events\ScormScoreRawSubmitted as Event;
 
-class ScormScoreRawSubmittedTest extends ModuleViewedTest {
+class ScormScoreRawSubmittedTest extends ScormEventTest {
     protected static $recipe_name = 'scorm_scoreraw_submitted';
 
     /**
