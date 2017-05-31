@@ -24,7 +24,7 @@ class ScormScoreRawSubmittedTest extends ScormEventTest {
                 'cmielement' => 'cmi.core.score.raw',
                 'attemptid' => 1,
             ],
-            'scorm_scoes' => parent::constructScormScoes()
+            'scorm_scoes' => $this->constructScormScoes()
         ]);
     }
 

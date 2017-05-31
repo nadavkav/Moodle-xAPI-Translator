@@ -14,6 +14,14 @@ class ScormEventTest extends ModuleViewedTest {
 
     protected function constructInput() {
         return array_merge(parent::constructInput(), [
+            'scorm_scoes_track' => [
+                'status' => 'completed',
+            ],
+            'cmi_data' => [
+                'cmivalue' => 'completed',
+                'cmielement' => 'cmi.core.lesson_status',
+                'attemptid' => 2,
+            ],
             'scorm_scoes' => $this->constructScormScoes(),
         ]);
     }
@@ -27,3 +35,4 @@ class ScormEventTest extends ModuleViewedTest {
         ];
     }
 }
+
