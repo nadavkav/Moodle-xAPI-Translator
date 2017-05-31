@@ -23,7 +23,7 @@ class ScormStatusSubmittedTest extends ScormEventTest {
                 'cmielement' => 'cmi.core.lesson_status',
                 'attemptid' => 2,
             ],
-            'scorm_scoes' => $this->constructScormScoes()
+            'scorm_scoes' => parent::constructScormScoes()
         ]);
     }
 
