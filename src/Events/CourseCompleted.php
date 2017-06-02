@@ -23,6 +23,9 @@ class CourseCompleted extends CourseViewed
     public function read(array $opts) {
         return [array_merge(parent::read($opts)[0], [
             'recipe' => 'course_completed',
+            'user_id' => $opts['relateduser']->id,
+            'user_url' => $opts['relateduser']->url,
+            'user_name' => $opts['relateduser']->fullname,
         ])];
     }
 }
