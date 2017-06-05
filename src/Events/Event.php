@@ -17,6 +17,7 @@ class Event extends PhpObj {
 
         return [[
             'user_id' => $opts['user']->id,
+            'user_email' => $opts['user']->email,
             'user_url' => $opts['user']->url,
             'user_name' => $opts['user']->fullname,
             'context_lang' => is_null($opts['course']->lang)
@@ -31,6 +32,7 @@ class Event extends PhpObj {
             'app_description' => strip_tags($opts['app']->summary) ?: $app_name,
             'app_type' => 'http://id.tincanapi.com/activitytype/site',
             'app_ext' => $opts['app'],
+            'sendmbox' => $opts['sendmbox'],
             'app_ext_key' => 'http://lrs.learninglocker.net/define/extensions/moodle_course',
             'source_url' => 'http://moodle.org',
             'source_name' => 'Moodle',
