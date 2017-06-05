@@ -51,7 +51,8 @@ abstract class EventTest extends PhpUnitTestCase {
         return (object) [
             'id' => 1,
             'url' => 'http://www.example.com/user_url',
-            'fullname' => 'Test user_name'
+            'fullname' => 'Test user_name',
+            'email' => 'test@test.com'
         ];
     }
 
