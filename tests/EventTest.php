@@ -36,7 +36,8 @@ abstract class EventTest extends PhpUnitTestCase {
             'app' => $this->constructApp(),
             'source' => $this->constructSource(),
             'event' => $this->constructEvent('\core\event\course_viewed'),
-            'info' => $this->constructInfo()
+            'info' => $this->constructInfo(),
+            'sendmbox' => true
         ];
     }
 
@@ -51,7 +52,8 @@ abstract class EventTest extends PhpUnitTestCase {
         return (object) [
             'id' => 1,
             'url' => 'http://www.example.com/user_url',
-            'fullname' => 'Test user_name'
+            'fullname' => 'Test user_name',
+            'email' => 'test@test.com'
         ];
     }
 
